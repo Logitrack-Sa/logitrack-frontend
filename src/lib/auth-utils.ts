@@ -1,5 +1,5 @@
 // src/lib/auth-utils.ts
-import { RoleName, normalizeRole as normalizeDomainRole } from '@/types/domain';
+import { RoleName, normalizeRole as normalizeDomainRole } from "@/types/domain";
 
 export type NormalizedRole = RoleName;
 
@@ -9,7 +9,7 @@ export function normalizeRole(role: string): NormalizedRole {
 
 export function hasRequiredRole(
   userRoles: string[] | undefined,
-  requiredRole: NormalizedRole
+  requiredRole: NormalizedRole,
 ): boolean {
   if (!userRoles) return false;
   return userRoles.map(normalizeRole).includes(requiredRole);

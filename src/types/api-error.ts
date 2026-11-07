@@ -1,5 +1,5 @@
 // src/types/api-error.ts
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 export interface ProblemDetailViolation {
   field: string;
@@ -23,13 +23,13 @@ export interface ProblemDetail {
 
 export function handleApiError(
   error: unknown,
-  setFormErrors?: (fields: Record<string, string>) => void
+  setFormErrors?: (fields: Record<string, string>) => void,
 ): void {
   const err = error as { response?: { data?: ProblemDetail } };
   const problem: ProblemDetail | undefined = err?.response?.data;
 
   if (!problem) {
-    toast.error('Error de conexión con el servidor o servicio no disponible.');
+    toast.error("Error de conexión con el servidor o servicio no disponible.");
     return;
   }
 
@@ -40,11 +40,16 @@ export function handleApiError(
       fieldMap[v.field] = v.message;
     });
     setFormErrors(fieldMap);
-    toast.error('Por favor revisa los campos señalados en el formulario.');
+    toast.error("Por favor revisa los campos señalados en el formulario.");
     return;
   }
 
-  toast.error(problem.code === 'ACCOUNT_NOT_VERIFIED'
-    ? 'Verificá tu correo electrónico antes de continuar.'
-    : problem.detail || problem.message || problem.title || 'Ocurrió un error al procesar la solicitud.');
+  toast.error(
+    problem.code === "ACCOUNT_NOT_VERIFIED"
+      ? "Verificá tu correo electrónico antes de continuar."
+      : problem.detail ||
+          problem.message ||
+          problem.title ||
+          "Ocurrió un error al procesar la solicitud.",
+  );
 }

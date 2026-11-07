@@ -1,6 +1,9 @@
+import { fileURLToPath } from "node:url";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: "standalone",
+  outputFileTracingRoot: fileURLToPath(new URL(".", import.meta.url)),
+  experimental: { cpus: 2 },
   reactStrictMode: true,
   poweredByHeader: false,
 };

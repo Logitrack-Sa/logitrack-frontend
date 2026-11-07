@@ -3,18 +3,25 @@
 // ==========================================
 // Enumeraciones de Dominio y Normalización
 // ==========================================
-export type RoleName = 'ADMIN' | 'CLIENTE' | 'REPARTIDOR';
-export type SpringSecurityRole = 'ROLE_ADMIN' | 'ROLE_CLIENTE' | 'ROLE_REPARTIDOR';
+export type RoleName = "ADMIN" | "CLIENTE" | "REPARTIDOR";
+export type SpringSecurityRole =
+  | "ROLE_ADMIN"
+  | "ROLE_CLIENTE"
+  | "ROLE_REPARTIDOR";
 export type AnyRole = RoleName | SpringSecurityRole;
 
-export type CourierStatus = 'AVAILABLE' | 'BUSY' | 'INACTIVE';
-export type LegacyCourierStatus = 'ACTIVO' | 'INACTIVO';
+export type CourierStatus = "AVAILABLE" | "BUSY" | "INACTIVE";
+export type LegacyCourierStatus = "ACTIVO" | "INACTIVO";
 export type CourierApiStatus = CourierStatus | LegacyCourierStatus;
 
-export type ShipmentStatus = 'PENDIENTE' | 'EN_RUTA' | 'ENTREGADO' | 'CANCELADO';
+export type ShipmentStatus =
+  | "PENDIENTE"
+  | "EN_RUTA"
+  | "ENTREGADO"
+  | "CANCELADO";
 
 export function normalizeRole(role: string): RoleName {
-  const clean = role.startsWith('ROLE_') ? role.substring(5) : role;
+  const clean = role.startsWith("ROLE_") ? role.substring(5) : role;
   return clean.toUpperCase() as RoleName;
 }
 

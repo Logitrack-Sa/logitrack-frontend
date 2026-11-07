@@ -1,6 +1,8 @@
 # LogiTrack Frontend (`logitrack-frontend`)
 
-Aplicación web interactiva desarrollada con **Next.js 14 (App Router)**, **TypeScript** y **Tailwind CSS** para el ecosistema distribuido de microservicios **LogiTrack** (Sprint 4).
+Aplicación web interactiva desarrollada con **Next.js 16 (App Router)**, **TypeScript** y **Tailwind CSS** para el ecosistema distribuido de microservicios **LogiTrack** (Sprint 4).
+
+Implementación local de Alex (#113–#120): ver [ejecución, pruebas y contratos pendientes](docs/SPRINT4-LOCAL.md). Requiere Node.js 22. Los tipos de repartidores y los permisos de cancelación se seleccionan según el contrato del backend instalado.
 
 ---
 
