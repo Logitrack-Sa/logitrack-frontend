@@ -3,7 +3,6 @@ import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { customerService } from '@/services/customer-service';
 import { shipmentService } from '@/services/shipment-service';
 import { handleApiError } from '@/types/api-error';
 import type { AddressDto } from '@/types/domain';
