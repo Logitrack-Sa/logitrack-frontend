@@ -8,6 +8,8 @@ export type SpringSecurityRole = 'ROLE_ADMIN' | 'ROLE_CLIENTE' | 'ROLE_REPARTIDO
 export type AnyRole = RoleName | SpringSecurityRole;
 
 export type CourierStatus = 'AVAILABLE' | 'BUSY' | 'INACTIVE';
+export type LegacyCourierStatus = 'ACTIVO' | 'INACTIVO';
+export type CourierApiStatus = CourierStatus | LegacyCourierStatus;
 
 export type ShipmentStatus = 'PENDIENTE' | 'EN_RUTA' | 'ENTREGADO' | 'CANCELADO';
 
@@ -54,18 +56,20 @@ export interface UserResponse {
 // ==========================================
 export interface CourierRequest {
   name: string;
+  dni: string;
   vehicleType: string;
 }
 
 export interface CourierStatusRequest {
-  status: CourierStatus;
+  status: CourierApiStatus;
 }
 
 export interface CourierResponse {
   id: string;
   name: string;
+  dni: string;
   vehicleType: string;
-  status: CourierStatus;
+  status: CourierApiStatus;
   createdAt: string;
 }
 

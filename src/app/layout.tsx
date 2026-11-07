@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
 import './globals.css';
+import { AuthProvider } from '@/hooks/useAuth';
+import { AppShell } from '@/components/AppShell';
 
 export const metadata: Metadata = {
   title: 'LogiTrack — Plataforma de Gestión Logística',
@@ -15,8 +17,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="min-h-screen bg-slate-50 text-slate-900 antialiased">
-        <Toaster position="top-right" />
-        {children}
+        <AuthProvider><Toaster position="top-right" /><AppShell>{children}</AppShell></AuthProvider>
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
 // src/types/api-error.ts
-import { toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export interface ProblemDetailViolation {
   field: string;
@@ -16,6 +16,8 @@ export interface ProblemDetail {
   code: string;
   timestamp: string;
   violations?: ProblemDetailViolation[];
+  details?: ProblemDetailViolation[];
+  message?: string;
   email_verified?: boolean;
 }
 
@@ -31,9 +33,10 @@ export function handleApiError(
     return;
   }
 
-  if (problem.violations && setFormErrors) {
+  const violations = problem.violations ?? problem.details;
+  if (violations?.length && setFormErrors) {
     const fieldMap: Record<string, string> = {};
-    problem.violations.forEach((v) => {
+    violations.forEach((v) => {
       fieldMap[v.field] = v.message;
     });
     setFormErrors(fieldMap);
@@ -41,5 +44,7 @@ export function handleApiError(
     return;
   }
 
-  toast.error(problem.detail || problem.title || 'Ocurrió un error al procesar la solicitud.');
+  toast.error(problem.code === 'ACCOUNT_NOT_VERIFIED'
+    ? 'Verificá tu correo electrónico antes de continuar.'
+    : problem.detail || problem.message || problem.title || 'Ocurrió un error al procesar la solicitud.');
 }
