@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { gatewayUrl } from "@/lib/api-client";
 import { clearSession, getToken } from "@/lib/session";
 import { consumeSse } from "@/lib/sse";
+import { resolveApiUrl } from "@/lib/deployment";
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -40,7 +41,11 @@ export function useChatStream() {
     setLoading(true);
     setError("");
     try {
-      const url = new URL("/api/v1/chat/stream", gatewayUrl);
+      const url = resolveApiUrl(
+        "/api/v1/chat/stream",
+        gatewayUrl,
+        window.location.origin,
+      );
       url.searchParams.set("prompt", prompt.trim());
       const response = await fetch(url, {
         headers: {

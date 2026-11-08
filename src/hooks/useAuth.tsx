@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { authService } from "@/services/auth-service";
+import { withBasePath } from "@/lib/deployment";
 import {
   clearSession,
   decodeSession,
@@ -93,7 +94,7 @@ export function useAuth() {
     hasRole: (role: RoleName) => state.user?.roles.includes(role) ?? false,
     logout: () => {
       clearSession();
-      window.location.assign("/login");
+      window.location.assign(withBasePath("/login"));
     },
   };
 }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { clearSession, getToken } from "./session";
+import { withBasePath, withoutBasePath } from "./deployment";
 
 export const gatewayUrl =
   process.env.NEXT_PUBLIC_API_GATEWAY_URL || "http://localhost:8080";
@@ -20,9 +21,11 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
       clearSession();
-      if (window.location.pathname !== "/login") {
+      if (withoutBasePath(window.location.pathname) !== "/login") {
         window.location.assign(
-          `/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`,
+          withBasePath(
+            `/login?redirect=${encodeURIComponent(withoutBasePath(window.location.pathname) + window.location.search)}`,
+          ),
         );
       }
     }

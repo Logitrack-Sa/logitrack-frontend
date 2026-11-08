@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decodeSession } from "@/lib/session";
+import { cookiePath, withBasePath } from "@/lib/deployment";
 
 export interface LogiTrackJwtPayload {
   sub: string;
@@ -26,7 +27,7 @@ export function proxy(request: NextRequest) {
     pathname.startsWith("/verify-email");
 
   if (!token && !isPublicRoute) {
-    const loginUrl = new URL("/login", request.url);
+    const loginUrl = new URL(withBasePath("/login"), request.url);
     loginUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
     return NextResponse.redirect(loginUrl);
   }
@@ -37,14 +38,17 @@ export function proxy(request: NextRequest) {
       const isExpired = !decoded;
 
       if (isExpired) {
-        const expiredLoginUrl = new URL("/login", request.url);
+        const expiredLoginUrl = new URL(withBasePath("/login"), request.url);
         expiredLoginUrl.searchParams.set("error", "session_expired");
         expiredLoginUrl.searchParams.set(
           "redirect",
           pathname + request.nextUrl.search,
         );
         const response = NextResponse.redirect(expiredLoginUrl);
-        response.cookies.delete(AUTH_TOKEN_COOKIE);
+        response.cookies.set(AUTH_TOKEN_COOKIE, "", {
+          path: cookiePath,
+          maxAge: 0,
+        });
         return response;
       }
 
@@ -55,7 +59,9 @@ export function proxy(request: NextRequest) {
         (pathname.startsWith("/admin") || pathname.startsWith("/customers")) &&
         !normalizedRoles.includes("ADMIN")
       ) {
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
+        return NextResponse.redirect(
+          new URL(withBasePath("/unauthorized"), request.url),
+        );
       }
 
       if (
@@ -63,12 +69,17 @@ export function proxy(request: NextRequest) {
         !normalizedRoles.includes("ADMIN") &&
         !normalizedRoles.includes("REPARTIDOR")
       ) {
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
+        return NextResponse.redirect(
+          new URL(withBasePath("/unauthorized"), request.url),
+        );
       }
     } catch {
-      const invalidLoginUrl = new URL("/login", request.url);
+      const invalidLoginUrl = new URL(withBasePath("/login"), request.url);
       const response = NextResponse.redirect(invalidLoginUrl);
-      response.cookies.delete(AUTH_TOKEN_COOKIE);
+      response.cookies.set(AUTH_TOKEN_COOKIE, "", {
+        path: cookiePath,
+        maxAge: 0,
+      });
       return response;
     }
   }
