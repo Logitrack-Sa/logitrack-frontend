@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  ShieldCheck,
   LayoutDashboard,
   Users,
   Truck,
@@ -15,6 +16,12 @@ export function Sidebar() {
   const pathname = usePathname();
   const { hasRole } = useAuth();
   const items = [
+    {
+      icon: ShieldCheck,
+      label: "Cuentas",
+      path: "/admin",
+      show: hasRole("ADMIN"),
+    },
     { icon: LayoutDashboard, label: "Resumen", path: "/dashboard", show: true },
     { icon: Package, label: "Envíos", path: "/shipments", show: true },
     {
@@ -27,7 +34,7 @@ export function Sidebar() {
       icon: Truck,
       label: "Repartidores",
       path: "/couriers",
-      show: hasRole("ADMIN") || hasRole("REPARTIDOR"),
+      show: hasRole("ADMIN"),
     },
     { icon: MessageSquare, label: "LogiBot", path: "/chat", show: true },
   ];
