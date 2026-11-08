@@ -115,7 +115,7 @@ function VerifyEmailContent() {
       {/* Estado 1: Verificando token */}
       {status === "loading" && (
         <div className="mt-6 flex flex-col items-center justify-center space-y-3 py-8 text-center">
-          <div className="h-9 w-9 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+          <div className="h-9 w-9 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
           <p className="text-sm font-medium text-slate-700">
             Validando tu enlace de activación...
           </p>
@@ -158,7 +158,7 @@ function VerifyEmailContent() {
 
           <Link
             href="/login"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-700"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-green-600/20 transition hover:bg-green-700"
           >
             Ir a Iniciar Sesión ahora
           </Link>
@@ -202,14 +202,14 @@ function VerifyEmailContent() {
                   value={resendEmail}
                   onChange={(e) => setResendEmail(e.target.value)}
                   placeholder="cliente.nuevo@gmail.com"
-                  className="mt-1.5 block w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:bg-white focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  className="mt-1.5 block w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:bg-white focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isResending}
-                className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-green-600/20 transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isResending
                   ? "Enviando nuevo enlace..."
@@ -221,7 +221,7 @@ function VerifyEmailContent() {
           <div className="border-t border-slate-100 pt-4 text-center">
             <Link
               href="/login"
-              className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+              className="text-sm font-semibold text-green-600 hover:text-green-700 hover:underline"
             >
               Volver a Iniciar Sesión
             </Link>
@@ -257,7 +257,7 @@ function VerifyEmailContent() {
                   value={resendEmail}
                   onChange={(e) => setResendEmail(e.target.value)}
                   placeholder="cliente.nuevo@gmail.com"
-                  className="mt-1.5 block w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:bg-white focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  className="mt-1.5 block w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:bg-white focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
                 />
               </div>
 
@@ -284,7 +284,7 @@ function VerifyEmailContent() {
           <div className="flex flex-col gap-2 border-t border-slate-100 pt-4 text-center text-sm">
             <Link
               href="/login"
-              className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+              className="font-semibold text-green-600 hover:text-green-700 hover:underline"
             >
               Ir a Iniciar Sesión
             </Link>

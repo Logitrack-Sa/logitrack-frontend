@@ -134,7 +134,7 @@ function LoginForm() {
               className={`block w-full rounded-xl border pl-10 pr-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition focus:outline-none focus:ring-2 ${
                 identifierError
                   ? "border-rose-500 bg-rose-50/30 focus:border-rose-500 focus:ring-rose-200"
-                  : "border-slate-300 bg-slate-50/50 focus:bg-white focus:border-blue-600 focus:ring-blue-100"
+                  : "border-slate-300 bg-slate-50/50 focus:bg-white focus:border-green-600 focus:ring-green-100"
               }`}
             />
           </div>
@@ -179,7 +179,7 @@ function LoginForm() {
               className={`block w-full rounded-xl border pl-10 pr-10 py-2.5 text-sm text-slate-900 shadow-sm transition focus:outline-none focus:ring-2 ${
                 formErrors.password
                   ? "border-rose-500 bg-rose-50/30 focus:border-rose-500 focus:ring-rose-200"
-                  : "border-slate-300 bg-slate-50/50 focus:bg-white focus:border-blue-600 focus:ring-blue-100"
+                  : "border-slate-300 bg-slate-50/50 focus:bg-white focus:border-green-600 focus:ring-green-100"
               }`}
             />
             <button
@@ -234,7 +234,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-green-600/20 transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (
             <>
@@ -266,7 +266,7 @@ function LoginForm() {
         ¿Todavía no tenés una cuenta?{" "}
         <Link
           href="/register"
-          className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+          className="font-semibold text-green-600 hover:text-green-700 hover:underline"
         >
           Registrate gratis acá
         </Link>

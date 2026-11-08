@@ -69,7 +69,7 @@ export default function UnauthorizedPage() {
                 {user.roles.map((r) => (
                   <span
                     key={r}
-                    className="inline-flex items-center rounded-md bg-blue-100 px-2 py-0.5 text-[11px] font-bold uppercase text-blue-800"
+                    className="inline-flex items-center rounded-md bg-green-100 px-2 py-0.5 text-[11px] font-bold uppercase text-green-800"
                   >
                     {r}
                   </span>
@@ -82,7 +82,7 @@ export default function UnauthorizedPage() {
         <div className="flex flex-col gap-3 pt-2">
           <Link
             href="/"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-700"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-green-600/20 transition hover:bg-green-700"
           >
             Volver al Panel Principal
             <svg
