@@ -45,6 +45,7 @@ export interface UserResponse {
   name?: string;
   roles: AnyRole[];
   enabled: boolean;
+  emailVerified?: boolean;
   customerId?: string | null;
   courierId?: string | null;
 }
