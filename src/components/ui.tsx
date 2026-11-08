@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useId } from "react";
 import type { InputHTMLAttributes, SelectHTMLAttributes } from "react";
 import type { PageResponse, RoleName } from "@/types/domain";
 import { useAuth } from "@/hooks/useAuth";
@@ -92,11 +93,15 @@ export function Select({
   children,
   ...props
 }: SelectHTMLAttributes<HTMLSelectElement> & { label: string }) {
+  const generatedId = useId();
+  const id = props.id ?? generatedId;
   return (
-    <label className="field">
-      <span>{label}</span>
-      <select {...props}>{children}</select>
-    </label>
+    <div className="field">
+      <label htmlFor={id}>{label}</label>
+      <select {...props} id={id}>
+        {children}
+      </select>
+    </div>
   );
 }
 export function Pagination({

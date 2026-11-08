@@ -140,14 +140,14 @@ export function Navbar() {
               {/* Administración: accesible exclusivamente para ADMIN */}
               {hasRole("ADMIN") && (
                 <Link
-                  href="/admin"
+                  href="/customers"
                   className={`rounded-lg px-3.5 py-2 text-sm font-medium transition ${
-                    pathname.startsWith("/admin")
+                    pathname.startsWith("/customers")
                       ? "bg-purple-600/20 text-purple-300 border border-purple-500/30"
                       : "text-slate-300 hover:bg-white/10 hover:text-white"
                   }`}
                 >
-                  Administración
+                  Clientes
                 </Link>
               )}
 
@@ -177,10 +177,10 @@ export function Navbar() {
               {/* Botón exclusivo para ADMIN */}
               {hasRole("ADMIN") && (
                 <Link
-                  href="/admin"
+                  href="/shipments"
                   className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-purple-400/30 bg-purple-500/15 px-3 py-1.5 text-xs font-semibold text-purple-300 transition hover:bg-purple-500/25"
                 >
-                  Asignar Repartidor
+                  Gestionar envíos
                 </Link>
               )}
 

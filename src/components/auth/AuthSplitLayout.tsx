@@ -134,9 +134,7 @@ export function AuthSplitLayout({
       <footer className="relative z-10 border-t border-white/10 bg-slate-950/40 px-6 lg:px-10 py-4 backdrop-blur-sm">
         <div className="flex w-full flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
           <span>© 2026 LogiTrack S.A. — Plataforma de Gestión Logística</span>
-          <span>
-            Conexión protegida vía API Gateway (localhost:8080) • RFC 7807 & JWT
-          </span>
+          <span>Tu operación logística, en un solo lugar.</span>
         </div>
       </footer>
     </div>

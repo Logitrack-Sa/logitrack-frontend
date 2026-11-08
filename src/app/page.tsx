@@ -172,8 +172,7 @@ export default function HomePage() {
                     Flota y Disponibilidad de Repartidores
                   </h3>
                   <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                    Supervisá el estado operativo de los mensajeros (AVAILABLE,
-                    BUSY, INACTIVE) sincronizado por eventos RabbitMQ.
+                    Consultá la flota, sus vehículos y su disponibilidad.
                   </p>
                 </Link>
               )}
@@ -181,7 +180,7 @@ export default function HomePage() {
               {/* 3. Administración: Visible EXCLUSIVAMENTE para ADMIN */}
               {hasRole("ADMIN") && (
                 <Link
-                  href="/admin"
+                  href="/customers"
                   className="group rounded-2xl border border-purple-400/25 bg-purple-500/10 p-6 backdrop-blur-md transition hover:border-purple-400/60 hover:bg-purple-500/15"
                 >
                   <div className="flex items-center justify-between">
@@ -205,11 +204,11 @@ export default function HomePage() {
                     </span>
                   </div>
                   <h3 className="mt-4 text-lg font-bold text-white group-hover:text-purple-300 transition">
-                    Asignación de Repartidor y Roles
+                    Clientes y datos de contacto
                   </h3>
                   <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                    Operaciones privilegiadas de administración de usuarios,
-                    alta de repartidores y asignación de couriers a envíos.
+                    Registrá clientes y consultá su información para organizar
+                    envíos.
                   </p>
                 </Link>
               )}

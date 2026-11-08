@@ -1,5 +1,7 @@
 # Verificación local — 7 de noviembre de 2026
 
+Este informe es histórico. Ver la [integración y pruebas del 8 de noviembre](INTEGRACION-EQUIPO-2026-11-08.md) para el estado actual, incluido Docker operativo.
+
 ## Comprobado
 
 - 27 pruebas aprobadas en 10 archivos: paginación de Spring Data/HATEOAS, manejo de errores por campo, sesión expirada, permisos y pertenencia, restricciones de creación, formulario de cliente, filtro/paginación/búsqueda de envíos, cabecera Bearer, login sin propagar el token anterior, streaming SSE/UTF-8, cancelación y errores del chatbot.

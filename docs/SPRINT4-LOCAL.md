@@ -14,7 +14,7 @@ npm run build
 npm run dev -- --hostname 127.0.0.1
 ```
 
-Abrir http://localhost:3000 e iniciar sesión con el administrador de la instalación local. No hay usuarios ni contraseñas predeterminados en este frontend. El login mínimo, apiClient y useAuth permiten probar las pantallas mientras se integran #110–#112 de Pablo; coordinar esos archivos antes de combinar su trabajo. No se implementan aquí el registro ni la verificación de correo.
+Abrir http://localhost:3000 e iniciar sesión con el administrador de la instalación local. No hay usuarios ni contraseñas predeterminados en este frontend. La rama feature/s4-integracion-equipo ya incorpora localmente #110–#112 de Pablo: cliente HTTP, login, registro, verificación y permisos. Ver el [informe de integración](INTEGRACION-EQUIPO-2026-11-08.md). El entorno aislado de validación utiliza Gateway en 8086; configurar esa URL si se ejecuta npm run dev contra ese entorno.
 
 La sesión usa la cookie auth_token y su expiración real. Decodificar el JWT en la interfaz no valida su firma: Gateway y servicios son los responsables de verificarlo y de aplicar las autorizaciones. La cookie es legible por JavaScript porque el cliente adjunta Bearer directamente, de acuerdo con el contrato actual; un futuro BFF con cookie HttpOnly requeriría coordinar la autenticación.
 
@@ -46,12 +46,7 @@ El Dockerfile vive en deploy/docker/Dockerfile.frontend y usa el repositorio her
 
 Desde deploy:
 
-```sh
-docker compose config --quiet
-docker compose build frontend
-docker compose up -d frontend
-docker compose ps frontend
-```
+Para el entorno local reproducible y sin Gmail ver deploy/docs/SPRINT4-LOCAL.md. Usa runtime.env privado y docker-compose.local.yml, con una red y una base diferentes a las del Sprint 3.
 
 El arranque de frontend por sí solo no demuestra el funcionamiento completo del backend. No reemplazar secretos, certificados ni volúmenes de una instalación existente.
 
@@ -61,4 +56,4 @@ Para verificar el límite de imagen de la issue: obtener su ID con docker compos
 
 ## Ramas locales
 
-Las ramas de las issues se encadenaron localmente para reutilizar la base y los servicios. #116 incorpora #117/#118 para seleccionar repartidores; la rama final feature/s4-120-docker-frontend contiene la integración de todas las pantallas. Ninguna se fusionó en develop ni se publicó. Antes de preparar PR, actualizar contratos y comparar con los cambios de los compañeros; no subir automáticamente toda la cadena.
+Las ramas de las issues se encadenaron localmente para reutilizar la base y los servicios. #116 incorpora #117/#118 para seleccionar repartidores; feature/s4-120-docker-frontend conserva la primera implementación. La integración posterior con el equipo está en feature/s4-integracion-equipo. Ninguna se fusionó en develop ni se publicó. Antes de preparar PR, actualizar contratos y comparar con los cambios de los compañeros; no subir automáticamente toda la cadena.
