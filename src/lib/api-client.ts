@@ -33,19 +33,24 @@ apiClient.interceptors.response.use(
       const { status, data } = error.response;
 
       if (status === 401) {
-        toast.error(
-          'Sesión vencida o credenciales inválidas. Redirigiendo a inicio de sesión...'
-        );
+        const isLoginPage =
+          typeof window !== 'undefined' &&
+          window.location.pathname.startsWith('/login');
+
         Cookies.remove(AUTH_TOKEN_COOKIE, { path: '/' });
 
-        if (
-          typeof window !== 'undefined' &&
-          !window.location.pathname.startsWith('/login')
-        ) {
-          const currentPath = `${window.location.pathname}${window.location.search}`;
-          setTimeout(() => {
-            window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
-          }, 1200);
+        if (isLoginPage) {
+          toast.error('Credenciales inválidas. Verifica tu usuario y contraseña.');
+        } else {
+          toast.error(
+            'Sesión vencida o credenciales inválidas. Redirigiendo a inicio de sesión...'
+          );
+          if (typeof window !== 'undefined') {
+            const currentPath = `${window.location.pathname}${window.location.search}`;
+            setTimeout(() => {
+              window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+            }, 1200);
+          }
         }
       } else if (status === 403) {
         if (data?.code === 'ACCOUNT_NOT_VERIFIED') {
