@@ -8,7 +8,7 @@ actual=$(git rev-parse HEAD)
 [ "$actual" = "$expected" ] || { echo "El checkout no coincide con el commit solicitado"; exit 1; }
 [ -z "$(git status --porcelain)" ] || { echo "El checkout tiene cambios locales"; exit 1; }
 image="logitrack-notebook-frontend:${actual:0:12}"
-docker build --build-arg NEXT_PUBLIC_API_GATEWAY_URL=/logitrack --build-arg NEXT_PUBLIC_BASE_PATH=/logitrack -t "$image" .
+docker build --network=host --build-arg NEXT_PUBLIC_API_GATEWAY_URL=/logitrack --build-arg NEXT_PUBLIC_BASE_PATH=/logitrack -t "$image" .
 cd /srv/apps/logitrack
 stamp=$(date -u +%Y%m%dT%H%M%SZ)
 backup="backups/frontend-$stamp"
