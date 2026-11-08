@@ -3,15 +3,15 @@
 
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { authService } from "@/services/auth-service";
 import { decodeSession, safeRedirect, setToken } from "@/lib/session";
+import { navigateAfterLogin } from "@/lib/navigation";
 import { handleApiError } from "@/types/api-error";
 import { AuthSplitLayout } from "@/components/auth/AuthSplitLayout";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = safeRedirect(searchParams.get("redirect"));
   const sessionExpired = searchParams.get("error") === "session_expired";
@@ -57,8 +57,7 @@ function LoginForm() {
       setToken(response.accessToken, response.expiresIn);
 
       toast.success("Inicio de sesión exitoso. Bienvenido a LogiTrack.");
-      router.push(redirectPath);
-      router.refresh();
+      navigateAfterLogin(redirectPath);
     } catch (error) {
       const status = (error as { response?: { status?: number } })?.response
         ?.status;
