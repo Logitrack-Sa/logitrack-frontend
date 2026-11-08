@@ -13,8 +13,13 @@ export interface NewAccount {
   courierId?: string;
 }
 export async function validateIdentity(role: AccountRole, id: string) {
-  if (role === "CLIENTE") await customerService.get(id);
-  else await courierService.get(id);
+  if (!id.trim()) throw new Error("Seleccioná una ficha para vincular.");
+  const record =
+    role === "CLIENTE"
+      ? await customerService.get(id)
+      : await courierService.get(id);
+  if (record.id !== id)
+    throw new Error("La ficha recibida no corresponde a la selección.");
 }
 export const userService = {
   async list(page = 0, signal?: AbortSignal) {

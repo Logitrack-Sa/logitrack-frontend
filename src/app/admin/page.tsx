@@ -37,6 +37,10 @@ function Accounts() {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     const id = String(f.get("identity") || "").trim();
+    if (!id) {
+      toast.error("Seleccioná una ficha antes de guardar.");
+      return;
+    }
     setBusy(true);
     try {
       if (selected) await userService.link(selected.id, role, id);

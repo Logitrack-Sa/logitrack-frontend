@@ -41,3 +41,16 @@ it("comprueba Courier antes de guardar el vínculo en Security", async () => {
     m.put.mock.invocationCallOrder[0],
   );
 });
+
+it("no elimina un vínculo cuando el selector todavía no tiene una ficha", async () => {
+  await expect(userService.link("user", "CLIENTE", "")).rejects.toThrow();
+  expect(m.getCustomer).not.toHaveBeenCalled();
+  expect(m.put).not.toHaveBeenCalled();
+});
+it("rechaza una ficha distinta de la solicitada", async () => {
+  m.getCourier.mockResolvedValue({ id: "otro" });
+  await expect(
+    userService.link("user", "REPARTIDOR", "courier"),
+  ).rejects.toThrow();
+  expect(m.put).not.toHaveBeenCalled();
+});
