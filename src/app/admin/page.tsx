@@ -1,5 +1,7 @@
 "use client";
 import { useCallback, useState, type FormEvent } from "react";
+import Link from "next/link";
+import { IdentityPicker } from "@/components/accounts/IdentityPicker";
 import toast from "react-hot-toast";
 import { Access, PageHeader, Pagination, ErrorState } from "@/components/ui";
 import { useRemote } from "@/hooks/useRemote";
@@ -102,7 +104,21 @@ function Accounts() {
                             </p>
                           </td>
                           <td className="account-identity">
-                            {u.customerId || u.courierId || "Sin vínculo"}
+                            {u.customerId && (
+                              <p>
+                                <Link href={"/customers/" + u.customerId}>
+                                  Ver cliente →
+                                </Link>
+                              </p>
+                            )}
+                            {u.courierId && (
+                              <p>
+                                <Link href={"/couriers/" + u.courierId}>
+                                  Ver repartidor →
+                                </Link>
+                              </p>
+                            )}
+                            {!u.customerId && !u.courierId && "Sin vínculo"}
                           </td>
                           <td>
                             {u.roles.some(
@@ -133,7 +149,7 @@ function Accounts() {
           <p>
             {selected
               ? selected.email
-              : "Primero creá la ficha en Clientes o Repartidores y copiá su identificador."}
+              : "Creá la ficha en Clientes o Repartidores y seleccioná a quién corresponde esta cuenta."}
           </p>
           <form className="form" key={formKey} onSubmit={submit}>
             {!selected && (
@@ -179,23 +195,17 @@ function Accounts() {
                 )}
               </select>
             </label>
-            <label>
-              {role === "CLIENTE" ? "ID de cliente" : "ID de repartidor"}
-              <input
-                key={role}
-                name="identity"
-                required
-                defaultValue={
-                  selected
-                    ? (role === "CLIENTE"
-                        ? selected.customerId
-                        : selected.courierId) || ""
-                    : ""
-                }
-                placeholder="UUID de la ficha existente"
-                pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
-              />
-            </label>
+            <IdentityPicker
+              key={role}
+              role={role}
+              currentId={
+                selected
+                  ? role === "CLIENTE"
+                    ? selected.customerId
+                    : selected.courierId
+                  : null
+              }
+            />
             <p className="muted">
               Se comprueba que la ficha exista antes de guardar. Los vínculos
               nuevos requieren volver a iniciar sesión.

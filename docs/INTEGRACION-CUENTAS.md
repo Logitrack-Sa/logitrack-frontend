@@ -5,7 +5,7 @@ Login, registro y verificación comparten la cabecera, paleta y pie del sitio p�
 ## Recorrido administrativo
 
 1. Crear la ficha en Clientes (Shipment) o Repartidores (Courier).
-2. Copiar el UUID de esa ficha y abrir Cuentas, solo para ADMIN.
+2. Abrir Cuentas, solo para ADMIN, y seleccionar la ficha por nombre y correo o DNI; el selector tiene paginación.
 3. Crear una cuenta vinculada o vincular una cuenta ya registrada. El frontend consulta la ficha de dominio antes de enviar el vínculo a Security.
 4. La persona inicia sesión y recibe un JWT con el rol y el identificador de dominio. Si se modifica un vínculo, debe volver a iniciar sesión.
 5. CLIENTE opera sus envíos. REPARTIDOR consulta sus entregas y realiza las transiciones permitidas. ADMIN gestiona las fichas y asignaciones.
