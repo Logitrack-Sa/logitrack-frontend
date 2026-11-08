@@ -4,7 +4,10 @@ import { expect, it, vi } from "vitest";
 import ShipmentsPage from "@/app/shipments/page";
 import { shipmentService } from "@/services/shipment-service";
 const { push } = vi.hoisted(() => ({ push: vi.fn() }));
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({
     ready: true,

@@ -42,7 +42,7 @@ Correo verificado, caché Redis, eventos RabbitMQ y herramientas reales del chat
 
 ## Docker
 
-El Dockerfile vive en deploy/docker/Dockerfile.frontend y usa el repositorio hermano logitrack-frontend como contexto. .dockerignore excluye credenciales, node_modules, cachés y Git. El runner standalone ejecuta sin root y el Compose limita su memoria a 256M; publica 3000 solo en loopback.
+El Dockerfile vive en logitrack-frontend/Dockerfile y usa el repositorio hermano logitrack-frontend como contexto. .dockerignore excluye credenciales, node_modules, cachés y Git. El runner standalone ejecuta sin root y el Compose limita su memoria a 256M; publica 3000 solo en loopback.
 
 Desde deploy:
 

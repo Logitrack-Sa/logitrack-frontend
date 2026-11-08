@@ -54,7 +54,7 @@ export function clearSession() {
   window.dispatchEvent(new Event("logitrack:session"));
 }
 
-export function safeRedirect(value: string | null, fallback = "/shipments") {
+export function safeRedirect(value: string | null, fallback = "/dashboard") {
   if (value) value = withoutBasePath(value);
   if (
     !value ||

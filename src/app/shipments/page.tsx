@@ -1,7 +1,7 @@
 "use client";
-import { useCallback, useState, type FormEvent } from "react";
+import { Suspense, useCallback, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useRemote } from "@/hooks/useRemote";
@@ -22,7 +22,14 @@ import {
 
 function Shipments() {
   const [page, setPage] = useState(0);
-  const [status, setStatus] = useState<ShipmentStatus | "">("");
+  const params = useSearchParams();
+  const selected = params.get("status");
+  const initial = ["PENDIENTE", "EN_RUTA", "ENTREGADO", "CANCELADO"].includes(
+    selected || "",
+  )
+    ? (selected as ShipmentStatus)
+    : "";
+  const [status, setStatus] = useState<ShipmentStatus | "">(initial);
   const [searching, setSearching] = useState(false);
   const { hasRole } = useAuth();
   const router = useRouter();
@@ -141,7 +148,9 @@ function Shipments() {
 export default function Page() {
   return (
     <Access>
-      <Shipments />
+      <Suspense fallback={<p>Cargando envíos…</p>}>
+        <Shipments />
+      </Suspense>
     </Access>
   );
 }

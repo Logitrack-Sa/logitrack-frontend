@@ -53,7 +53,7 @@ describe("Navegación de la interfaz, adicional a la autorización del backend",
 it.each(["//example.org", "https://example.org", "/\\example.org", "/login"])(
   "evita una redirección insegura: %s",
   (value) => {
-    expect(safeRedirect(value)).toBe("/shipments");
+    expect(safeRedirect(value)).toBe("/dashboard");
   },
 );
 it("conserva rutas locales con parámetros", () =>
