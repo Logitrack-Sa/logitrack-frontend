@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useChatStream } from "@/hooks/useChatStream";
 import { useAuth } from "@/hooks/useAuth";
+import { usePathname } from "next/navigation";
 
 /** Markdown básico con nodos React; nunca interpreta HTML recibido del modelo. */
 function MessageText({ text }: { text: string }) {
@@ -26,9 +27,13 @@ export function ChatWidget() {
   return user ? <ChatPanel key={user.sub} /> : null;
 }
 function ChatPanel() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { messages, loading, error, send, cancel } = useChatStream();
   const bottom = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (pathname === "/chat") setOpen(true);
+  }, [pathname]);
   useEffect(() => {
     if (open) bottom.current?.scrollIntoView({ block: "nearest" });
   }, [messages, open]);

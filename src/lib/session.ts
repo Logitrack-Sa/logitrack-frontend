@@ -8,6 +8,9 @@ export interface Session extends JwtPayload {
   email_verified?: boolean;
   customerId?: string;
   courierId?: string;
+  email?: string;
+  username?: string;
+  name?: string;
 }
 
 /** Decodificar solo determina la presentación. Gateway y servicios validan firma y permisos. */
@@ -15,8 +18,10 @@ export function decodeSession(token: string, now = Date.now()): Session | null {
   try {
     const claims = jwtDecode<JwtPayload & { roles?: unknown }>(token);
     if (
+      typeof claims.sub !== "string" ||
       !claims.sub ||
-      !claims.exp ||
+      typeof claims.exp !== "number" ||
+      !Number.isFinite(claims.exp) ||
       claims.exp * 1000 <= now ||
       !Array.isArray(claims.roles)
     )
@@ -46,4 +51,19 @@ export function setToken(token: string, expiresIn: number) {
 export function clearSession() {
   Cookies.remove("auth_token", { path: "/" });
   window.dispatchEvent(new Event("logitrack:session"));
+}
+
+export function safeRedirect(value: string | null, fallback = "/shipments") {
+  if (
+    !value ||
+    !value.startsWith("/") ||
+    value.startsWith("//") ||
+    /[\\\u0000-\u001f]/.test(value)
+  )
+    return fallback;
+  const url = new URL(value, "https://logitrack.local");
+  return url.origin === "https://logitrack.local" &&
+    !url.pathname.startsWith("/login")
+    ? `${url.pathname}${url.search}${url.hash}`
+    : fallback;
 }

@@ -2,10 +2,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { Navbar } from "@/components/layout/Navbar";
+import { VerificationBanner } from "@/components/auth/VerificationBanner";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, logout, hasRole } = useAuth();
+  if (
+    ["/", "/login", "/register", "/verify-email", "/unauthorized"].includes(
+      pathname,
+    )
+  )
+    return (
+      <div className="public-page">
+        <Navbar />
+        {children}
+      </div>
+    );
   const links = [
     { href: "/shipments", text: "Envíos", show: true },
     { href: "/customers", text: "Clientes", show: hasRole("ADMIN") },
@@ -59,12 +72,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </div>
         <main className="main-content">
-          {user?.email_verified === false && (
-            <div className="notice">
-              Verificá tu correo electrónico para habilitar la creación de
-              envíos.
-            </div>
-          )}
+          <VerificationBanner />
           {children}
         </main>
       </div>

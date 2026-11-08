@@ -11,7 +11,8 @@
     "build": "next build --webpack",
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run && npm run test:automation",
+    "test:automation": "node --test automation/test/review.test.mjs",
     "format": "prettier --write src tests *.ts *.mjs *.json",
     "format:check": "prettier --check src tests *.ts *.mjs *.json"
   },

@@ -3,6 +3,7 @@ import { clearSession, getToken } from "./session";
 
 export const gatewayUrl =
   process.env.NEXT_PUBLIC_API_GATEWAY_URL || "http://localhost:8080";
+export const AUTH_TOKEN_COOKIE = "auth_token";
 export const apiClient = axios.create({
   baseURL: gatewayUrl,
   timeout: 15000,
