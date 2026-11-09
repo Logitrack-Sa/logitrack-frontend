@@ -231,6 +231,7 @@ export default function Dashboard() {
                   )}
                 </div>
                 <RecentShipments
+                  filtered={filter !== 0}
                   rows={pages[filter] || []}
                   busy={busy}
                   canCreate={canCreate}

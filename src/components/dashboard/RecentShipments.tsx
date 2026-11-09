@@ -7,10 +7,12 @@ export function RecentShipments({
   rows,
   busy,
   canCreate,
+  filtered = false,
 }: {
   rows: ShipmentResponse[];
   busy: boolean;
   canCreate: boolean;
+  filtered?: boolean;
 }) {
   if (busy)
     return (
@@ -27,13 +29,19 @@ export function RecentShipments({
         <span className="ops-empty-icon">
           <PackageOpen size={32} strokeWidth={1.3} />
         </span>
-        <h3>Todavía no hay envíos por acá</h3>
+        <h3>
+          {filtered
+            ? "Sin envíos en este estado"
+            : "Todavía no hay envíos por acá"}
+        </h3>
         <p>
-          {canCreate
-            ? "Registrá tu primer paquete y seguí cada paso de su recorrido desde este lugar."
-            : "Los envíos que tengas asignados aparecerán en este espacio."}
+          {filtered
+            ? "Elegí otro estado para consultar el resto de tu actividad."
+            : canCreate
+              ? "Registrá tu primer paquete y seguí cada paso de su recorrido desde este lugar."
+              : "Los envíos que tengas asignados aparecerán en este espacio."}
         </p>
-        {canCreate && (
+        {canCreate && !filtered && (
           <Link className="button secondary" href="/shipments/new">
             Crear un envío <ArrowUpRight size={15} />
           </Link>
