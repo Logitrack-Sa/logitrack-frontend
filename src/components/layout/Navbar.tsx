@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Package, ShieldCheck } from "lucide-react";
+import { Menu, X, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { withBasePath } from "@/lib/deployment";
 export function Navbar() {
@@ -25,11 +25,12 @@ export function Navbar() {
         {isAuthenticated && <button onClick={logout}>SALIR</button>}
       </div>
       <div className="cargo-nav">
-        <Link className="cargo-logo" href="/">
-          <Package size={32} />
-          <span>
-            Logi<span>Track</span>
-          </span>
+        <Link className="cargo-logo" href="/" aria-label="LogiTrack - Inicio">
+          <img
+            src={withBasePath("/LOGO_GENERAL.png")}
+            alt="LogiTrack"
+            className="cargo-logo-img"
+          />
         </Link>
         <button
           className="cargo-toggle"

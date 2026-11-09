@@ -18,11 +18,12 @@ export function AuthSplitLayout({
   return (
     <main className={"auth-page auth-page-" + variant}>
       <header className="auth-header">
-        <Link href="/" className="auth-brand">
-          <span>
-            <Box size={23} strokeWidth={1.7} />
-          </span>
-          LogiTrack<span>.</span>
+        <Link href="/" className="auth-brand" aria-label="LogiTrack - Inicio">
+          <img
+            src={withBasePath("/LOGO_GENERAL.png")}
+            alt="LogiTrack"
+            className="auth-brand-logo"
+          />
         </Link>
         <nav aria-label="Navegación de acceso">
           <Link href="/seguimiento">

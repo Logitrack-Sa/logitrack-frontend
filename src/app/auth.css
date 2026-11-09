@@ -14,26 +14,22 @@
   padding: 0 48px;
 }
 .auth-brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
-  font-size: 24px;
-  font-weight: 650;
-  letter-spacing: -1px;
-  color: #284c37;
+  text-decoration: none;
 }
-.auth-brand > span:first-child {
-  display: grid;
-  place-items: center;
-  background: #2f7250;
-  color: white;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+.auth-brand-logo {
+  height: 40px;
+  width: auto;
+  max-width: 170px;
+  object-fit: contain;
+  display: block;
 }
-.auth-brand > span:last-child {
-  color: #89a76e;
-  margin-left: -10px;
+@media (max-width: 640px) {
+  .auth-brand-logo {
+    height: 32px;
+    max-width: 135px;
+  }
 }
 .auth-header nav {
   display: flex;

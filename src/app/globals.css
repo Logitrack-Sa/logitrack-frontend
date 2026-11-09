@@ -1140,17 +1140,22 @@ h1 {
   gap: 20px;
 }
 .cargo-logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 31px;
-  font-weight: 850;
-  font-style: italic;
-  letter-spacing: -1.5px;
-  color: #4b9b4c;
+  text-decoration: none;
 }
-.cargo-logo > span > span {
-  color: #21833a;
+.cargo-logo-img {
+  height: 44px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  display: block;
+}
+.cargo-footer .cargo-logo-img {
+  height: 38px;
+  max-width: 155px;
+  margin-bottom: 14px;
 }
 .cargo-nav nav {
   display: flex;
@@ -1600,6 +1605,10 @@ h1 {
   }
   .cargo-logo {
     font-size: 27px;
+  }
+  .cargo-logo-img {
+    height: 36px;
+    max-width: 145px;
   }
   .cargo-toggle {
     display: block;

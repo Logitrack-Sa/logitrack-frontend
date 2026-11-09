@@ -143,8 +143,12 @@ export function SiteFooter() {
   return (
     <footer className="cargo-footer">
       <div>
-        <Link href="/" className="cargo-logo">
-          LogiTrack.
+        <Link href="/" className="cargo-logo" aria-label="LogiTrack - Inicio">
+          <img
+            src={withBasePath("/LOGO_GENERAL.png")}
+            alt="LogiTrack"
+            className="cargo-logo-img"
+          />
         </Link>
         <p>Conectamos la información de cada entrega.</p>
       </div>

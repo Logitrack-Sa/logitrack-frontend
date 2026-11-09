@@ -3,7 +3,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
-  Box,
   ChevronRight,
   CircleHelp,
   LayoutGrid,
@@ -14,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { withBasePath } from "@/lib/deployment";
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { hasRole } = useAuth();
@@ -41,11 +41,12 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   ];
   return (
     <aside className="ops-sidebar">
-      <Link href="/dashboard" className="ops-brand" onClick={onNavigate}>
-        <span>
-          <Box size={23} strokeWidth={1.7} />
-        </span>
-        LogiTrack<span className="ops-brand-point">.</span>
+      <Link href="/dashboard" className="ops-brand" onClick={onNavigate} aria-label="LogiTrack - Dashboard">
+        <img
+          src={withBasePath("/LOGO_GENERAL.png")}
+          alt="LogiTrack"
+          className="ops-brand-logo"
+        />
       </Link>
       <div className="ops-workspace-label">
         <span className="ops-workspace-icon">L</span>

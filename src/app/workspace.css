@@ -32,25 +32,25 @@
 .ops-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: white;
-  font-size: 24px;
-  font-weight: 650;
-  letter-spacing: -1.15px;
-  padding: 0 8px;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-decoration: none;
 }
-.ops-brand > span:first-child {
-  width: 35px;
-  height: 35px;
-  background: #d2e9b7;
-  color: #254c33;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
+.ops-brand:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
-.ops-brand .ops-brand-point {
-  color: #cce6b2;
-  margin-left: -10px;
+.ops-brand-logo {
+  height: 32px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
 }
 .ops-workspace-label {
   display: flex;

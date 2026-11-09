@@ -7,11 +7,17 @@ import "./auth.css";
 import { AuthProvider } from "@/hooks/useAuth";
 import { AppShell } from "@/components/AppShell";
 import { ChatWidget } from "@/components/chat/ChatWidget";
+import { withBasePath } from "@/lib/deployment";
 
 export const metadata: Metadata = {
   title: "LogiTrack — Plataforma de Gestión Logística",
   description:
     "Organizá tus envíos, consultá su recorrido y gestioná cada entrega desde un solo lugar.",
+  icons: {
+    icon: withBasePath("/LOGO_GENERAL.png"),
+    shortcut: withBasePath("/LOGO_GENERAL.png"),
+    apple: withBasePath("/LOGO_GENERAL.png"),
+  },
 };
 
 export default function RootLayout({
