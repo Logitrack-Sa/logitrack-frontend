@@ -7,6 +7,7 @@ import { useRemote } from "@/hooks/useRemote";
 import { Access, ErrorState, PageHeader } from "@/components/ui";
 import { ShipmentDetail } from "@/components/shipments/ShipmentDetail";
 import { ShipmentActions } from "@/components/shipments/ShipmentActions";
+import { ShipmentPayment } from "@/components/shipments/ShipmentPayment";
 function Shipment({ id }: { id: string }) {
   const load = useCallback(
     (signal: AbortSignal) => shipmentService.get(id, signal),
@@ -28,6 +29,7 @@ function Shipment({ id }: { id: string }) {
         data && (
           <>
             <ShipmentDetail shipment={data} />
+            <ShipmentPayment shipment={data} />
             <ShipmentActions shipment={data} refresh={reload} />
           </>
         )

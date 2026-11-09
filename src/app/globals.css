@@ -1907,3 +1907,54 @@ h1 {
   color: #52645b;
   font-size: 0.9rem;
 }
+
+.shipment-payment {
+  margin-top: 1.5rem;
+}
+.payment-heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #126834;
+}
+.payment-heading h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.payment-heading p {
+  margin: 0.25rem 0 0;
+  color: #52645b;
+}
+.payment-amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 1rem 0;
+}
+.payment-state {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 1rem;
+  background: #fff3ce;
+  color: #705b14;
+}
+.payment-state-approved {
+  background: #dcefe3;
+  color: #126834;
+}
+.payment-state-rejected,
+.payment-state-charged_back {
+  background: #fbe4e3;
+  color: #962c27;
+}
+.payment-test-mode {
+  font-size: 0.85rem;
+  color: #695515;
+}
+.payment-privacy {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #52645b;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
