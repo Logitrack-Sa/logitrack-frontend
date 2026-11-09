@@ -1,7 +1,41 @@
 import Cookies from "js-cookie";
-import { afterEach, expect, it } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
+import { AxiosError } from "axios";
 import { apiClient } from "@/lib/api-client";
 afterEach(() => Cookies.remove("auth_token"));
+it("un perfil rechazado limpia la sesión sin sacar al visitante del seguimiento público", async () => {
+  Cookies.set("auth_token", "revoked-test-token");
+  const assign = vi.fn();
+  vi.stubGlobal("window", {
+    location: { pathname: "/seguimiento", assign },
+    dispatchEvent: window.dispatchEvent.bind(window),
+  });
+  try {
+    await expect(
+      apiClient.get("/api/v1/auth/me", {
+        adapter: async (config) => {
+          throw new AxiosError(
+            "Unauthorized",
+            "ERR_BAD_REQUEST",
+            config,
+            {},
+            {
+              data: {},
+              status: 401,
+              statusText: "Unauthorized",
+              headers: {},
+              config,
+            },
+          );
+        },
+      }),
+    ).rejects.toBeInstanceOf(AxiosError);
+    expect(assign).not.toHaveBeenCalled();
+    expect(Cookies.get("auth_token")).toBeUndefined();
+  } finally {
+    vi.unstubAllGlobals();
+  }
+});
 it("adjunta la sesión a las peticiones al Gateway", async () => {
   Cookies.set("auth_token", "test-only-token");
   let authorization: unknown;

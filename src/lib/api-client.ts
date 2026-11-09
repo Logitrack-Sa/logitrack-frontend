@@ -21,7 +21,11 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
       clearSession();
-      if (withoutBasePath(window.location.pathname) !== "/login") {
+      if (
+        !["/login", "/seguimiento"].includes(
+          withoutBasePath(window.location.pathname),
+        )
+      ) {
         window.location.assign(
           withBasePath(
             `/login?redirect=${encodeURIComponent(withoutBasePath(window.location.pathname) + window.location.search)}`,
