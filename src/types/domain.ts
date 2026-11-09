@@ -127,6 +127,13 @@ export interface AssignCourierRequest {
   courierId: string;
 }
 
+export interface PublicTrackingResponse {
+  trackingCode: string;
+  status: ShipmentStatus;
+  createdAt: string;
+  movements: { status: ShipmentStatus; changedAt: string }[];
+}
+
 export interface ShipmentResponse {
   id: string;
   trackingCode: string;

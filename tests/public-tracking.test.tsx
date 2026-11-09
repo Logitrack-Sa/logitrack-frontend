@@ -2,38 +2,56 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, expect, it, vi } from "vitest";
 import Page from "@/app/seguimiento/page";
 const m = vi.hoisted(() => ({
-  user: null as { sub: string } | null,
-  push: vi.fn(),
-  tracking: vi.fn(),
+  publicTracking: vi.fn(),
+  code: "LT-A1B2C3D4E5",
 }));
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: m.push }),
-  useSearchParams: () => new URLSearchParams("codigo=LT-PRUEBA"),
-}));
-vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ ready: true, user: m.user }),
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams("codigo=" + m.code),
 }));
 vi.mock("@/services/shipment-service", () => ({
-  shipmentService: { tracking: m.tracking },
+  shipmentService: { publicTracking: m.publicTracking },
 }));
 beforeEach(() => {
   vi.clearAllMocks();
-  m.user = null;
+  m.code = "LT-A1B2C3D4E5";
 });
-it("no consulta envíos sin sesión y conserva el código al pedir login", () => {
+it("muestra el estado y los movimientos sin sesión ni redirección al detalle privado", async () => {
+  m.publicTracking.mockResolvedValue({
+    trackingCode: m.code,
+    status: "EN_RUTA",
+    createdAt: "2026-11-09T12:00:00Z",
+    movements: [{ status: "PENDIENTE", changedAt: "2026-11-09T12:00:00Z" }],
+  });
   render(<Page />);
-  expect(m.tracking).not.toHaveBeenCalled();
-  expect(screen.getByRole("link", { name: /Iniciar sesión/ })).toHaveAttribute(
-    "href",
-    "/login?redirect=%2Fseguimiento%3Fcodigo%3DLT-PRUEBA",
+  expect(
+    await screen.findByRole("article", { name: "Resultado del seguimiento" }),
+  ).toBeInTheDocument();
+  expect(m.publicTracking).toHaveBeenCalledWith(
+    m.code,
+    expect.any(AbortSignal),
   );
+  expect(
+    screen.queryByRole("link", { name: /Iniciar sesión/ }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.getByText(
+      "Por privacidad, esta consulta no muestra datos personales ni direcciones.",
+    ),
+  ).toBeInTheDocument();
 });
-it("resuelve el seguimiento mediante el backend para el usuario autenticado", async () => {
-  m.user = { sub: "cliente" };
-  m.tracking.mockResolvedValue({ id: "envio-1" });
+it("muestra un error útil para un código inexistente", async () => {
+  m.publicTracking.mockRejectedValue(new Error("sin conexión"));
   render(<Page />);
   await waitFor(() =>
-    expect(m.push).toHaveBeenCalledWith("/shipments/envio-1"),
+    expect(screen.getByRole("alert")).toHaveTextContent("Volvé a intentar"),
   );
-  expect(m.tracking).toHaveBeenCalledWith("LT-PRUEBA");
+});
+it("valida el código antes de consultar el backend", async () => {
+  m.code = "invalido";
+  render(<Page />);
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "Revisá el código",
+  );
+  expect(m.publicTracking).not.toHaveBeenCalled();
 });

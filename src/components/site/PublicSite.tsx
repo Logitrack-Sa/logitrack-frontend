@@ -113,7 +113,7 @@ export function Faq() {
       {[
         [
           "¿Cómo consulto mi envío?",
-          "Ingresá el código de seguimiento e iniciá sesión. Podrás consultar los envíos a los que tiene acceso tu cuenta.",
+          "Ingresá el código de seguimiento para consultar el estado y los movimientos de tu envío, sin iniciar sesión.",
         ],
         [
           "¿Cómo conozco el costo?",

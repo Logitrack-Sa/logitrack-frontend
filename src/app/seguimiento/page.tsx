@@ -1,69 +1,122 @@
 "use client";
-import Link from "next/link";
+import axios from "axios";
 import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useSearchParams } from "next/navigation";
 import { shipmentService } from "@/services/shipment-service";
+import type { PublicTrackingResponse } from "@/types/domain";
+import { Badge, date } from "@/components/ui";
 import {
   SiteIntro,
   TrackingForm,
   SiteFooter,
 } from "@/components/site/PublicSite";
+
 function Tracking() {
   const params = useSearchParams();
-  const code = (params.get("codigo") || "").trim();
-  const { user, ready } = useAuth();
-  const router = useRouter();
-  const [error, setError] = useState(false);
+  const code = (params.get("codigo") || "").trim().toUpperCase();
+  const [result, setResult] = useState<{
+    code: string;
+    data?: PublicTrackingResponse;
+    error?: string;
+  }>();
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    if (!ready || !user || !code) return;
-    let active = true;
-    setError(false);
-    shipmentService
-      .tracking(code)
-      .then((s) => {
-        if (active) router.push("/shipments/" + s.id);
-      })
-      .catch(() => {
-        if (active) setError(true);
+    setResult(undefined);
+    if (!code) return;
+    if (!/^LT-[A-Z0-9]{10}$/.test(code)) {
+      setResult({
+        code,
+        error:
+          "Revisá el código: debe comenzar con LT- y tener 10 letras o números después del guion.",
       });
-    return () => {
-      active = false;
-    };
-  }, [code, ready, user?.sub, router]);
-  const destination =
-    "/seguimiento" + (code ? "?codigo=" + encodeURIComponent(code) : "");
+      return;
+    }
+    const controller = new AbortController();
+    shipmentService
+      .publicTracking(code, controller.signal)
+      .then((data) => {
+        if (!controller.signal.aborted) setResult({ code, data });
+      })
+      .catch((error) => {
+        if (controller.signal.aborted) return;
+        const status = axios.isAxiosError(error)
+          ? error.response?.status
+          : undefined;
+        setResult({
+          code,
+          error:
+            status === 404
+              ? "No encontramos un envío con ese código. Revisá que esté escrito correctamente."
+              : status === 429
+                ? "Hay muchas consultas. Esperá un minuto y volvé a intentar."
+                : "No pudimos consultar el envío. Volvé a intentar en unos momentos.",
+        });
+      });
+    return () => controller.abort();
+  }, [code, attempt]);
+  const current = result?.code === code ? result : undefined;
   return (
     <main className="cargo-site">
       <SiteIntro eyebrow="SEGUIMIENTO DE ENVÍOS" title="Tu envío, más cerca.">
-        <p>Ingresá tu código para consultar su estado e historial.</p>
+        <p>
+          Consultá el estado y los movimientos con tu código. Sin iniciar
+          sesión.
+        </p>
       </SiteIntro>
       <section className="cargo-section cargo-tracking-page">
         <TrackingForm />
-        {!ready ? (
-          <p role="status">Comprobando tu sesión…</p>
-        ) : !user ? (
-          <div className="cargo-login-note">
-            <h2>Consultá de forma segura</h2>
-            <p>
-              Iniciá sesión con la cuenta vinculada a tu envío para acceder a su
-              información.
-            </p>
-            <Link
-              className="button"
-              href={"/login?redirect=" + encodeURIComponent(destination)}
-            >
-              Iniciar sesión →
-            </Link>
-          </div>
-        ) : code ? (
-          <p role={error ? "alert" : "status"}>
-            {error
-              ? "No pudimos consultar ese envío. Revisá el código y que pertenezca a tu cuenta."
-              : "Consultando el envío " + code + "…"}
+        {!code ? (
+          <p>
+            Encontrá el código en el comprobante o pedíselo a quien te envió el
+            paquete.
           </p>
+        ) : !current ? (
+          <p role="status">Consultando el envío…</p>
+        ) : current.error ? (
+          <div>
+            <p role="alert">{current.error}</p>
+            <button
+              type="button"
+              className="button secondary"
+              onClick={() => setAttempt((value) => value + 1)}
+            >
+              Volver a consultar
+            </button>
+          </div>
         ) : (
-          <p>Encontrá el código en el detalle del envío registrado.</p>
+          current.data && (
+            <article
+              className="card public-tracking-result"
+              aria-label="Resultado del seguimiento"
+            >
+              <p className="eyebrow">TU ENVÍO</p>
+              <h2>{current.data.trackingCode}</h2>
+              <Badge status={current.data.status} />
+              <p>Registrado el {date(current.data.createdAt)}</p>
+              <h3>Movimientos del envío</h3>
+              {current.data.movements.length ? (
+                <ol className="public-tracking-timeline">
+                  {current.data.movements.map((movement, index) => (
+                    <li key={`${movement.changedAt}-${index}`}>
+                      <Badge status={movement.status} />
+                      <time dateTime={movement.changedAt}>
+                        {date(movement.changedAt)}
+                      </time>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>
+                  El envío fue registrado. Todavía no tiene movimientos
+                  adicionales.
+                </p>
+              )}
+              <p>
+                Por privacidad, esta consulta no muestra datos personales ni
+                direcciones.
+              </p>
+            </article>
+          )
         )}
       </section>
       <SiteFooter />

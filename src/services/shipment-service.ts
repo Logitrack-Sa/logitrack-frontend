@@ -1,4 +1,5 @@
-import { apiClient } from "@/lib/api-client";
+import axios from "axios";
+import { apiClient, gatewayUrl } from "@/lib/api-client";
 import type {
   AssignCourierRequest,
   ChangeStatusRequest,
@@ -6,8 +7,17 @@ import type {
   PageResponse,
   ShipmentResponse,
   ShipmentStatus,
+  PublicTrackingResponse,
 } from "@/types/domain";
 export const shipmentService = {
+  async publicTracking(code: string, signal?: AbortSignal) {
+    return (
+      await axios.get<PublicTrackingResponse>(
+        `${gatewayUrl}/api/v1/shipments/public-tracking/${encodeURIComponent(code)}`,
+        { signal, timeout: 15000, headers: { Accept: "application/json" } },
+      )
+    ).data;
+  },
   async list(page = 0, status?: ShipmentStatus, signal?: AbortSignal) {
     return (
       await apiClient.get<PageResponse<ShipmentResponse>>("/api/v1/shipments", {
