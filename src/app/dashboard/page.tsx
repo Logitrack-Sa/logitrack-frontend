@@ -6,6 +6,7 @@ import {
   ArrowUpRight,
   CheckCheck,
   Clock3,
+  MapPin,
   Package,
   Plus,
   RefreshCw,
