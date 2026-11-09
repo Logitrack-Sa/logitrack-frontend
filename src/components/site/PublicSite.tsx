@@ -94,7 +94,7 @@ export function PackingSteps() {
         [
           "entrega",
           "Guardá tu seguimiento",
-          "Consultá el estado y el historial desde tu cuenta.",
+          "Consultá el estado y los movimientos con tu código, sin iniciar sesión.",
         ],
       ].map(([icon, title, text], i) => (
         <article key={icon}>

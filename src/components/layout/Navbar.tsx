@@ -10,8 +10,8 @@ export function Navbar() {
   return (
     <header className="cargo-header">
       <div className="cargo-notice">
-        <ShieldCheck size={14} /> Cuidá tus datos. Consultá tus envíos desde tu
-        cuenta de LogiTrack.
+        <ShieldCheck size={14} /> Seguí tu envío sin iniciar sesión. Tus datos
+        personales siguen protegidos.
       </div>
       <div className="cargo-utility">
         <Link href="/seguimiento">
