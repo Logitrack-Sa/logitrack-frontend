@@ -51,6 +51,7 @@ export function isMercadoPagoCheckout(value: string) {
         "www.mercadopago.com.ar",
         "mercadopago.com.ar",
         "sandbox.mercadopago.com",
+        "sandbox.mercadopago.com.ar",
         "www.mercadopago.com",
         "mercadopago.com",
       ].includes(url.hostname)

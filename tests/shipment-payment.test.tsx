@@ -96,7 +96,7 @@ it("oculta la gestión de pagos al repartidor", async () => {
 it("solo admite redirecciones HTTPS a Mercado Pago", () => {
   expect(
     isMercadoPagoCheckout(
-      "https://sandbox.mercadopago.com/checkout?pref_id=123",
+      "https://sandbox.mercadopago.com.ar/checkout?pref_id=123",
     ),
   ).toBe(true);
   expect(isMercadoPagoCheckout("https://mercadopago.com.evil.test/pay")).toBe(
