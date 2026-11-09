@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
+import "@fontsource-variable/inter";
 import "./globals.css";
+import "./workspace.css";
+import "./auth.css";
 import { AuthProvider } from "@/hooks/useAuth";
 import { AppShell } from "@/components/AppShell";
 import { ChatWidget } from "@/components/chat/ChatWidget";
@@ -8,7 +11,7 @@ import { ChatWidget } from "@/components/chat/ChatWidget";
 export const metadata: Metadata = {
   title: "LogiTrack — Plataforma de Gestión Logística",
   description:
-    "Cliente web Next.js integrado al ecosistema de microservicios LogiTrack",
+    "Organizá tus envíos, consultá su recorrido y gestioná cada entrega desde un solo lugar.",
 };
 
 export default function RootLayout({

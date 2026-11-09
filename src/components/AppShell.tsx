@@ -8,12 +8,12 @@ import { VerificationBanner } from "@/components/auth/VerificationBanner";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   if (
+    ["/login", "/register", "/verify-email", "/unauthorized"].includes(pathname)
+  )
+    return <div className="public-page">{children}</div>;
+  if (
     [
       "/",
-      "/login",
-      "/register",
-      "/verify-email",
-      "/unauthorized",
       "/servicios",
       "/ayuda",
       "/nosotros",
@@ -27,11 +27,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
     );
   return (
-    <div className="app-shell">
+    <div className="ops-shell">
       <Sidebar />
-      <div className="workspace">
+      <div className="ops-workspace">
         <DashboardHeader />
-        <main className="main-content">
+        <main className="ops-main">
           <VerificationBanner />
           {children}
         </main>

@@ -15,7 +15,7 @@ export default function Home() {
       <section
         className="cargo-hero"
         style={{
-          backgroundImage: `linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.08)),url("${withBasePath("/logistics-banner.jpg")}")`,
+          backgroundImage: `linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.08)),url("${withBasePath("/images/warehouse.jpg")}")`,
         }}
       >
         <div className="cargo-hero-content">

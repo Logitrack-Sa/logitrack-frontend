@@ -1,65 +1,107 @@
 import Link from "next/link";
-import { Package, ShieldCheck, ArrowRight } from "lucide-react";
-import { SiteFooter } from "@/components/site/PublicSite";
+import { ArrowRight, Box, MapPin, ShieldCheck } from "lucide-react";
 import { withBasePath } from "@/lib/deployment";
 interface AuthSplitLayoutProps {
   children: React.ReactNode;
   title: string;
   subtitle: string;
   badgeText?: string;
+  variant?: "login" | "register";
 }
 export function AuthSplitLayout({
   children,
   title,
   subtitle,
-  badgeText = "Mi LogiTrack",
+  badgeText = "MI LOGITRACK",
+  variant = "login",
 }: AuthSplitLayoutProps) {
   return (
-    <main className="cargo-site">
-      <section className="cargo-auth">
-        <aside
-          className="cargo-auth-picture"
-          style={{
-            backgroundImage: `linear-gradient(180deg,rgba(10,53,25,.7),rgba(9,49,24,.85)),url("${withBasePath("/logistics-banner.jpg")}")`,
-          }}
-        >
-          <span className="auth-picture-mark">
-            <Package size={25} /> LogiTrack
+    <main className={"auth-page auth-page-" + variant}>
+      <header className="auth-header">
+        <Link href="/" className="auth-brand">
+          <span>
+            <Box size={23} strokeWidth={1.7} />
           </span>
-          <div>
-            <p>TU OPERACIÓN, CONECTADA</p>
-            <h2>
-              Todo empieza
-              <br />
-              con una entrega.
-            </h2>
-            <span>
-              Gestioná tus envíos, consultá su recorrido y acompañá cada paso
-              desde tu cuenta.
-            </span>
-          </div>
+          LogiTrack<span>.</span>
+        </Link>
+        <nav aria-label="Navegación de acceso">
           <Link href="/seguimiento">
-            Consultá tu seguimiento <ArrowRight size={17} />
+            <MapPin size={15} />
+            Seguir un envío
+          </Link>
+          <Link href="/ayuda">¿Necesitás ayuda?</Link>
+        </nav>
+      </header>
+      <div className="auth-layout">
+        <aside className="auth-photo-panel">
+          <img
+            src={withBasePath(
+              variant === "register"
+                ? "/images/warehouse.jpg"
+                : "/images/dispatch.jpg",
+            )}
+            alt={
+              variant === "register"
+                ? "Centro de distribución de paquetes"
+                : "Paquetes preparados para su próximo recorrido"
+            }
+          />
+          <div className="auth-photo-overlay" />
+          <span className="auth-photo-tag">
+            <span />
+            CONECTAMOS CADA ENTREGA
+          </span>
+          <div className="auth-photo-copy">
+            <span>MENOS VUELTAS. MÁS DESTINOS.</span>
+            <h2>
+              {variant === "register" ? (
+                <>
+                  Tu próxima historia
+                  <br />
+                  empieza con un envío.
+                </>
+              ) : (
+                <>
+                  Tu logística,
+                  <br />
+                  en un solo lugar.
+                </>
+              )}
+            </h2>
+            <p>
+              Desde el primer paquete hasta su destino. Organizá, consultá y
+              acompañá cada entrega con LogiTrack.
+            </p>
+            <div className="auth-photo-line">
+              <Box size={17} />
+              <i />
+              <MapPin size={17} />
+            </div>
+          </div>
+          <Link className="auth-photo-link" href="/seguimiento">
+            ¿Ya tenés un código? Seguí tu envío
+            <ArrowRight size={16} />
           </Link>
         </aside>
-        <div className="cargo-auth-card">
-          <div className="cargo-auth-top">
-            <span>
+        <section className="auth-form-panel">
+          <div className="auth-form-inner">
+            <p className="auth-eyebrow">
               <ShieldCheck size={14} />
               {badgeText}
-            </span>
-            <Link href="/">← Volver al inicio</Link>
+            </p>
+            <h1>{title}</h1>
+            <p className="auth-subtitle">{subtitle}</p>
+            {children}
           </div>
-          <h1>{title}</h1>
-          <p>{subtitle}</p>
-          {children}
-          <div className="cargo-auth-help">
-            ¿Necesitás ayuda?{" "}
-            <Link href="/ayuda">Consultá nuestras preguntas frecuentes →</Link>
-          </div>
-        </div>
-      </section>
-      <SiteFooter />
+          <footer className="auth-form-footer">
+            <span>© {new Date().getFullYear()} LogiTrack</span>
+            <Link href="/">
+              Volver al sitio
+              <ArrowRight size={13} />
+            </Link>
+          </footer>
+        </section>
+      </div>
     </main>
   );
 }

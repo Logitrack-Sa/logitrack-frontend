@@ -1,75 +1,97 @@
 "use client";
-// Adaptado de 4lexxe/DevsProject dashboard-admin/src/dashboard/layout/Sidebar.tsx.
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  ShieldCheck,
-  LayoutDashboard,
-  Users,
-  Truck,
-  Package,
-  MessageSquare,
   ArrowUpRight,
+  Box,
+  ChevronRight,
+  CircleHelp,
+  LayoutGrid,
+  MessageSquare,
+  Package,
+  ShieldCheck,
+  Truck,
+  Users,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-export function Sidebar() {
+export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { hasRole } = useAuth();
-  const items = [
+  const groups = [
     {
-      icon: ShieldCheck,
-      label: "Cuentas",
-      path: "/admin",
-      show: hasRole("ADMIN"),
+      label: "TU ESPACIO",
+      items: [
+        { icon: LayoutGrid, label: "Resumen", path: "/dashboard" },
+        { icon: Package, label: "Envíos", path: "/shipments" },
+        { icon: MessageSquare, label: "LogiBot", path: "/chat" },
+      ],
     },
-    { icon: LayoutDashboard, label: "Resumen", path: "/dashboard", show: true },
-    { icon: Package, label: "Envíos", path: "/shipments", show: true },
-    {
-      icon: Users,
-      label: "Clientes",
-      path: "/customers",
-      show: hasRole("ADMIN"),
-    },
-    {
-      icon: Truck,
-      label: "Repartidores",
-      path: "/couriers",
-      show: hasRole("ADMIN"),
-    },
-    { icon: MessageSquare, label: "LogiBot", path: "/chat", show: true },
+    ...(hasRole("ADMIN")
+      ? [
+          {
+            label: "ADMINISTRACIÓN",
+            items: [
+              { icon: Users, label: "Clientes", path: "/customers" },
+              { icon: Truck, label: "Repartidores", path: "/couriers" },
+              { icon: ShieldCheck, label: "Cuentas y accesos", path: "/admin" },
+            ],
+          },
+        ]
+      : []),
   ];
   return (
-    <aside className="sidebar">
-      <Link href="/" className="brand">
-        <span className="brand-icon">
-          <Package size={22} />
+    <aside className="ops-sidebar">
+      <Link href="/dashboard" className="ops-brand" onClick={onNavigate}>
+        <span>
+          <Box size={23} strokeWidth={1.7} />
         </span>
-        LogiTrack<span className="brand-dot">.</span>
+        LogiTrack<span className="ops-brand-point">.</span>
       </Link>
-      <p className="sidebar-caption">ESPACIO DE TRABAJO</p>
+      <div className="ops-workspace-label">
+        <span className="ops-workspace-icon">L</span>
+        <div>
+          <strong>Mi espacio de trabajo</strong>
+          <small>Gestión logística</small>
+        </div>
+        <ChevronRight size={14} />
+      </div>
       <nav aria-label="Navegación principal">
-        {items
-          .filter((i) => i.show)
-          .map(({ icon: Icon, ...item }) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={pathname.startsWith(item.path) ? "active" : ""}
-            >
-              <Icon size={18} />
-              {item.label}
-            </Link>
-          ))}
+        {groups.map((group) => (
+          <div className="ops-nav-group" key={group.label}>
+            <p>{group.label}</p>
+            {group.items.map(({ icon: Icon, label, path }) => {
+              const active =
+                pathname === path || pathname.startsWith(path + "/");
+              return (
+                <Link
+                  key={path}
+                  href={path}
+                  aria-current={active ? "page" : undefined}
+                  className={active ? "is-active" : ""}
+                  onClick={onNavigate}
+                >
+                  <Icon size={18} strokeWidth={1.7} />
+                  <span>{label}</span>
+                  {active && <ChevronRight size={14} />}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
       </nav>
-      <div className="sidebar-footer">
-        <p>
-          Todo tu recorrido,
-          <br />
-          <strong>en un solo lugar.</strong>
-        </p>
-        <Link href="/" className="sidebar-home">
-          Ver sitio web <ArrowUpRight size={15} />
+      <div className="ops-sidebar-bottom">
+        <div className="ops-help-card">
+          <CircleHelp size={22} />
+          <strong>Estamos para ayudarte</strong>
+          <p>Encontrá respuestas y prepará tu próximo envío.</p>
+          <Link href="/ayuda" onClick={onNavigate}>
+            Centro de ayuda <ArrowUpRight size={14} />
+          </Link>
+        </div>
+        <Link className="ops-back-site" href="/" onClick={onNavigate}>
+          Ir al sitio web <ArrowUpRight size={16} />
         </Link>
+        <span className="ops-sidebar-footnote">CADA ENTREGA NOS CONECTA</span>
       </div>
     </aside>
   );

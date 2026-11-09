@@ -1,402 +1,205 @@
-// src/app/register/page.tsx
 "use client";
-
-import React, { useState } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import {
+  ArrowRight,
+  AtSign,
+  Check,
+  CircleCheck,
+  LockKeyhole,
+  Mail,
+  UserRound,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 import { authService } from "@/services/auth-service";
 import { handleApiError } from "@/types/api-error";
-import { UserResponse } from "@/types/domain";
+import type { UserResponse } from "@/types/domain";
 import { AuthSplitLayout } from "@/components/auth/AuthSplitLayout";
-
+import { AuthInput } from "@/components/auth/AuthInput";
 export default function RegisterPage() {
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [registeredUser, setRegisteredUser] = useState<UserResponse | null>(
-    null,
-  );
-  const [isResending, setIsResending] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [busy, setBusy] = useState(false);
+  const [registered, setRegistered] = useState<UserResponse>();
+  const [resending, setResending] = useState(false);
+  const update =
+    (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setForm({ ...form, [field]: e.target.value });
+      setErrors((current) => ({ ...current, [field]: "" }));
+    };
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setFormErrors({});
-
-    const localErrors: Record<string, string> = {};
-    if (!email.trim()) {
-      localErrors.email = "El correo electrónico es obligatorio.";
-    }
-    if (!password || password.length < 8) {
-      localErrors.password = "La contraseña debe tener al menos 8 caracteres.";
-    }
-    if (Object.keys(localErrors).length > 0) {
-      setFormErrors(localErrors);
-      return;
-    }
-
-    setIsSubmitting(true);
-
+    const next: Record<string, string> = {};
+    if (!form.name.trim()) next.name = "Ingresá tu nombre completo.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+      next.email = "Ingresá un correo electrónico válido.";
+    if (form.password.length < 8) next.password = "Usá al menos 8 caracteres.";
+    if (form.password !== form.confirmPassword || !form.confirmPassword)
+      next.confirmPassword = "Las contraseñas deben coincidir.";
+    setErrors(next);
+    if (Object.keys(next).length) return;
+    setBusy(true);
     try {
-      const response = await authService.register({
-        email: email.trim(),
-        password,
-        username: username.trim() || undefined,
-        name: name.trim() || undefined,
+      const user = await authService.register({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        username: form.username.trim() || undefined,
+        password: form.password,
       });
-
-      setRegisteredUser(response);
-      toast.success(
-        "Registro completado. Revisa tu bandeja de entrada para activar tu cuenta.",
-      );
+      setRegistered(user);
+      setForm({ ...form, password: "", confirmPassword: "" });
+      toast.success("Cuenta creada. Revisá tu correo para activarla.");
     } catch (error) {
-      handleApiError(error, setFormErrors);
+      handleApiError(error, setErrors);
     } finally {
-      setIsSubmitting(false);
+      setBusy(false);
     }
-  };
-
-  const handleResendEmail = async () => {
-    const targetEmail = registeredUser?.email || email.trim();
-    if (!targetEmail) return;
-
-    setIsResending(true);
+  }
+  async function resend() {
+    if (!registered) return;
+    setResending(true);
     try {
-      const res = await authService.resendVerification(targetEmail);
+      await authService.resendVerification(registered.email);
       toast.success(
-        res.message ||
-          "Se ha enviado un nuevo enlace de activación a tu correo.",
+        "Si la cuenta requiere verificación, recibirás un nuevo enlace.",
       );
     } catch (error) {
       handleApiError(error);
     } finally {
-      setIsResending(false);
+      setResending(false);
     }
-  };
-
+  }
   return (
     <AuthSplitLayout
-      badgeText="Alta de Clientes"
-      title="Crear Cuenta en LogiTrack"
-      subtitle="Registrate para cotizar, despachar y hacer seguimiento de tus envíos en vivo."
+      variant="register"
+      badgeText="TU CUENTA, TU PRÓXIMO DESTINO"
+      title="Empecemos el recorrido."
+      subtitle="Creá tu cuenta y organizá tus envíos a tu manera."
     >
-      {registeredUser ? (
-        <div className="mt-6 space-y-5">
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-5 text-sm text-emerald-950">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2.5}
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m4.5 12.75 6 6 9-13.5"
-                  />
-                </svg>
-              </div>
-              <p className="font-semibold text-base text-emerald-900">
-                ¡Tu cuenta fue registrada con éxito!
-              </p>
-            </div>
-            <p className="mt-3 text-emerald-800 leading-relaxed">
-              Enviamos un correo electrónico con tu enlace único de activación a{" "}
-              <span className="font-semibold underline">
-                {registeredUser.email}
-              </span>
-              . Por favor revisá tu bandeja de entrada (o carpeta de spam) y
-              hacé clic en el enlace para habilitar tu cuenta.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <button
-              type="button"
-              onClick={handleResendEmail}
-              disabled={isResending}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isResending ? (
-                <>
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-600 border-t-transparent" />
-                  Reenviando correo...
-                </>
-              ) : (
-                "Reenviar enlace de verificación"
-              )}
-            </button>
-
-            <Link
-              href="/login"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-green-600/20 transition hover:bg-green-700"
-            >
-              Ir a Iniciar Sesión
-            </Link>
-          </div>
+      {registered ? (
+        <div className="auth-success" role="status">
+          <span className="auth-success-icon">
+            <CircleCheck size={29} />
+          </span>
+          <h2>Revisá tu correo</h2>
+          <p>
+            Solicitamos el envío de un enlace a{" "}
+            <strong>{registered.email}</strong>. Abrilo para activar tu cuenta y
+            empezar a crear envíos.
+          </p>
+          <p className="auth-field-hint">
+            Si no lo encontrás, revisá la carpeta de spam o solicitá otro
+            enlace.
+          </p>
+          <Link href="/login" className="auth-submit">
+            Ir a iniciar sesión
+            <ArrowRight size={17} />
+          </Link>
+          <button
+            type="button"
+            className="auth-resend"
+            disabled={resending}
+            onClick={resend}
+          >
+            {resending
+              ? "Solicitando enlace…"
+              : "Reenviar enlace de verificación"}
+          </button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-slate-700"
-              >
-                Nombre completo
-              </label>
-              <div className="relative mt-1.5">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="María González"
-                  className={`block w-full rounded-xl border pl-9 pr-3 py-2.5 text-sm text-slate-900 shadow-sm transition focus:outline-none focus:ring-2 ${
-                    formErrors.name
-                      ? "border-rose-500 bg-rose-50/30 focus:border-rose-500 focus:ring-rose-200"
-                      : "border-slate-300 bg-slate-50/50 focus:bg-white focus:border-green-600 focus:ring-green-100"
-                  }`}
-                />
-              </div>
-              {formErrors.name && (
-                <p className="mt-1 text-xs font-medium text-rose-600">
-                  {formErrors.name}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-slate-700"
-              >
-                Usuario
-              </label>
-              <div className="relative mt-1.5">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                  <span className="text-xs font-bold">@</span>
-                </div>
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  autoComplete="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="mariagonzalez"
-                  className={`block w-full rounded-xl border pl-8 pr-3 py-2.5 text-sm text-slate-900 shadow-sm transition focus:outline-none focus:ring-2 ${
-                    formErrors.username
-                      ? "border-rose-500 bg-rose-50/30 focus:border-rose-500 focus:ring-rose-200"
-                      : "border-slate-300 bg-slate-50/50 focus:bg-white focus:border-green-600 focus:ring-green-100"
-                  }`}
-                />
-              </div>
-              {formErrors.username && (
-                <p className="mt-1 text-xs font-medium text-rose-600">
-                  {formErrors.username}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Correo electrónico <span className="text-rose-500">*</span>
-            </label>
-            <div className="relative mt-1.5">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
-                  />
-                </svg>
-              </div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="cliente.nuevo@gmail.com"
-                className={`block w-full rounded-xl border pl-10 pr-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition focus:outline-none focus:ring-2 ${
-                  formErrors.email
-                    ? "border-rose-500 bg-rose-50/30 focus:border-rose-500 focus:ring-rose-200"
-                    : "border-slate-300 bg-slate-50/50 focus:bg-white focus:border-green-600 focus:ring-green-100"
-                }`}
-              />
-            </div>
-            {formErrors.email && (
-              <p className="mt-1 text-xs font-medium text-rose-600">
-                {formErrors.email}
+        <form className="auth-register-form" onSubmit={submit} noValidate>
+          <AuthInput
+            id="register-name"
+            label="Nombre completo"
+            icon={UserRound}
+            autoComplete="name"
+            placeholder="María González"
+            value={form.name}
+            onChange={update("name")}
+            required
+            maxLength={200}
+            error={errors.name}
+          />
+          <AuthInput
+            id="register-email"
+            label="Correo electrónico"
+            icon={Mail}
+            type="email"
+            autoComplete="email"
+            placeholder="nombre@ejemplo.com"
+            value={form.email}
+            onChange={update("email")}
+            required
+            maxLength={254}
+            error={errors.email}
+          />
+          <AuthInput
+            id="register-username"
+            label="Nombre de usuario"
+            icon={AtSign}
+            autoComplete="username"
+            placeholder="Elegí cómo querés ingresar"
+            value={form.username}
+            onChange={update("username")}
+            maxLength={100}
+            error={errors.username}
+          />
+          <AuthInput
+            id="register-password"
+            label="Contraseña"
+            icon={LockKeyhole}
+            passwordField
+            autoComplete="new-password"
+            placeholder="Al menos 8 caracteres"
+            value={form.password}
+            onChange={update("password")}
+            required
+            maxLength={100}
+            error={errors.password}
+          />
+          <AuthInput
+            id="register-confirm"
+            label="Repetir contraseña"
+            icon={LockKeyhole}
+            passwordField
+            autoComplete="new-password"
+            placeholder="Volvé a escribir tu contraseña"
+            value={form.confirmPassword}
+            onChange={update("confirmPassword")}
+            required
+            maxLength={100}
+            error={errors.confirmPassword}
+          />
+          {form.password.length >= 8 &&
+            form.confirmPassword === form.password && (
+              <p className="auth-password-match">
+                <Check size={13} />
+                Las contraseñas coinciden
               </p>
             )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Contraseña <span className="text-rose-500">*</span>
-            </label>
-            <div className="relative mt-1.5">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
-                  />
-                </svg>
-              </div>
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 8 caracteres (ej. Password123!)"
-                className={`block w-full rounded-xl border pl-10 pr-10 py-2.5 text-sm text-slate-900 shadow-sm transition focus:outline-none focus:ring-2 ${
-                  formErrors.password
-                    ? "border-rose-500 bg-rose-50/30 focus:border-rose-500 focus:ring-rose-200"
-                    : "border-slate-300 bg-slate-50/50 focus:bg-white focus:border-green-600 focus:ring-green-100"
-                }`}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600"
-                tabIndex={-1}
-              >
-                {showPassword ? (
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-            {formErrors.password && (
-              <p className="mt-1 text-xs font-medium text-rose-600">
-                {formErrors.password}
-              </p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-green-600/20 transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isSubmitting ? (
-              <>
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                Registrando cuenta...
-              </>
-            ) : (
-              <>
-                Crear cuenta ahora
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                  />
-                </svg>
-              </>
-            )}
+          <button type="submit" className="auth-submit" disabled={busy}>
+            {busy ? "Creando tu cuenta…" : "Crear mi cuenta"}
+            <ArrowRight size={17} />
           </button>
+          <p className="auth-register-note">
+            <Check size={13} />
+            Verificá tu correo y empezá. Sin trámites adicionales.
+          </p>
         </form>
       )}
-
-      <div className="mt-6 border-t border-slate-100 pt-5 text-center text-sm text-slate-600">
-        ¿Ya tenés una cuenta registrada?{" "}
-        <Link
-          href="/login"
-          className="font-semibold text-green-600 hover:text-green-700 hover:underline"
-        >
-          Iniciá sesión acá
+      <p className="auth-switch">
+        ¿Ya tenés cuenta?{" "}
+        <Link href="/login">
+          Iniciá sesión
+          <ArrowRight size={14} />
         </Link>
-      </div>
+      </p>
     </AuthSplitLayout>
   );
 }
