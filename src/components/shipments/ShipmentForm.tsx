@@ -42,7 +42,7 @@ function AddressFields({
   );
 }
 export function ShipmentForm() {
-  const { user, hasRole } = useAuth();
+  const { user, hasRole, logout } = useAuth();
   const [customerId, setCustomerId] = useState("");
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
