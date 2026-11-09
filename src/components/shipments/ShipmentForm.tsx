@@ -87,8 +87,10 @@ export function ShipmentForm() {
       )}
       {!hasRole("ADMIN") && !user?.customerId && (
         <Notice>
-          Tu cuenta todavía no tiene un cliente vinculado. Contactá al
-          administrador.
+          Volvé a iniciar sesión para preparar automáticamente tu perfil de cliente.
+          <button type="button" className="btn btn-secondary" onClick={logout}>
+            Volver a ingresar
+          </button>
         </Notice>
       )}
       {hasRole("ADMIN") ? (
