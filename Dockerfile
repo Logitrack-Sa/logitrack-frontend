@@ -19,12 +19,16 @@ ENV NEXT_PUBLIC_PAYMENTS_ENABLED=$NEXT_PUBLIC_PAYMENTS_ENABLED \
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN mkdir -p public && npm run build
+# Alpine usa musl; la variante glibc no se necesita en la imagen final.
+RUN rm -rf .next/standalone/node_modules/@img/sharp-linux-x64 \
+    .next/standalone/node_modules/@img/sharp-libvips-linux-x64
 
-FROM node:22-alpine AS runner
+FROM alpine:3.24 AS runner
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
-RUN addgroup -S -g 1001 nextjs && adduser -S -u 1001 -G nextjs nextjs \
-    && rm -rf /usr/local/lib/node_modules/npm /opt/yarn-*
+RUN apk add --no-cache libstdc++ \
+    && addgroup -S -g 1001 nextjs && adduser -S -u 1001 -G nextjs nextjs
+COPY --from=deps /usr/local/bin/node /usr/local/bin/node
 COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nextjs /app/public ./public
