@@ -24,6 +24,8 @@ export function proxy(request: NextRequest) {
   const isPublicRoute =
     pathname === "/login" ||
     pathname === "/register" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password" ||
     pathname.startsWith("/verify-email");
 
   if (!token && !isPublicRoute) {

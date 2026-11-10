@@ -62,3 +62,28 @@ it("no propaga una sesión anterior al iniciar sesión nuevamente", async () => 
   );
   expect(authorization).toBeUndefined();
 });
+
+it.each(["/api/v1/auth/forgot-password", "/api/v1/auth/reset-password"])(
+  "permite recuperar acceso con una cookie antigua en %s",
+  async (path) => {
+    Cookies.set("auth_token", "old-test-token");
+    let authorization: unknown;
+    await apiClient.post(
+      path,
+      {},
+      {
+        adapter: async (config) => {
+          authorization = config.headers.Authorization;
+          return {
+            data: {},
+            status: 200,
+            statusText: "OK",
+            headers: {},
+            config,
+          };
+        },
+      },
+    );
+    expect(authorization).toBeUndefined();
+  },
+);

@@ -12,7 +12,14 @@ export const apiClient = axios.create({
 });
 apiClient.interceptors.request.use((config) => {
   const token = getToken();
-  if (token && config.url !== "/api/v1/auth/login")
+  if (
+    token &&
+    ![
+      "/api/v1/auth/login",
+      "/api/v1/auth/forgot-password",
+      "/api/v1/auth/reset-password",
+    ].includes(config.url || "")
+  )
     config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -22,9 +29,12 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && typeof window !== "undefined") {
       clearSession();
       if (
-        !["/login", "/seguimiento"].includes(
-          withoutBasePath(window.location.pathname),
-        )
+        ![
+          "/login",
+          "/seguimiento",
+          "/forgot-password",
+          "/reset-password",
+        ].includes(withoutBasePath(window.location.pathname))
       ) {
         window.location.assign(
           withBasePath(
