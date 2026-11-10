@@ -1,6 +1,6 @@
 /* Workspace: layout, navigation and operational overview. */
 .ops-shell {
-  --ops-green: #126d59;
+  --ops-green: #138b34;
   --ops-ink: #23372f;
   --ops-muted: #7d8883;
   --ops-line: #e6eae7;
@@ -120,8 +120,8 @@
   background: #ffffff0b;
 }
 .ops-nav-group a.is-active {
-  background: #b6e8b4;
-  color: #234a35;
+  background: #f0f6ed;
+  color: #138b34;
   font-weight: 600;
 }
 .ops-sidebar-bottom {
@@ -365,18 +365,18 @@
   border-radius: 8px;
 }
 .ops-shell .button {
-  background: #26684e;
+  background: #138b34;
   color: #fff;
   font-size: 13px;
   font-weight: 550;
   padding: 11px 16px;
   min-height: 39px;
   border-radius: 8px;
-  border: 1px solid #26684e;
+  border: 1px solid #138b34;
   box-shadow: 0 2px 3px #213a2210;
 }
 .ops-shell .button:hover {
-  background: #1f583f;
+  background: #0f742b;
 }
 .ops-shell .button.secondary {
   background: white;

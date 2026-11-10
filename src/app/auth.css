@@ -176,7 +176,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #126d59;
+  color: #18883b;
   font-size: 10px;
   letter-spacing: 1.4px;
   font-weight: 500;
@@ -282,7 +282,7 @@
   padding: 13px 16px;
   width: 100%;
   border: 1px solid #41773e;
-  background: #477c42;
+  background: #138b34;
   color: white;
   border-radius: 8px;
   font-size: 14px;
@@ -291,7 +291,7 @@
   transition: background 0.15s;
 }
 .auth-submit:hover {
-  background: #386735;
+  background: #0f742b;
 }
 .auth-submit:disabled {
   opacity: 0.6;
@@ -398,7 +398,7 @@
 }
 .auth-page-login .auth-form-inner form button[type="submit"] {
   border-radius: 8px;
-  background: #477c42;
+  background: #138b34;
   box-shadow: none;
   font-size: 14px;
 }
