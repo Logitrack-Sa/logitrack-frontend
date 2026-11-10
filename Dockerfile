@@ -21,7 +21,8 @@ COPY . .
 RUN mkdir -p public && npm run build
 # Alpine usa musl; la variante glibc no se necesita en la imagen final.
 RUN rm -rf .next/standalone/node_modules/@img/sharp-linux-x64 \
-    .next/standalone/node_modules/@img/sharp-libvips-linux-x64
+    .next/standalone/node_modules/@img/sharp-libvips-linux-x64 \
+    && find .next/standalone -type f -name '*.map' -delete
 
 FROM alpine:3.24 AS runner
 WORKDIR /app
