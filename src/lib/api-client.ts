@@ -3,7 +3,7 @@ import { clearSession, getToken } from "./session";
 import { withBasePath, withoutBasePath } from "./deployment";
 
 export const gatewayUrl =
-  process.env.NEXT_PUBLIC_API_GATEWAY_URL || "http://localhost:8080";
+  process.env.NEXT_PUBLIC_API_GATEWAY_URL || withBasePath("");
 export const AUTH_TOKEN_COOKIE = "auth_token";
 export const apiClient = axios.create({
   baseURL: gatewayUrl,

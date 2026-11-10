@@ -20,7 +20,7 @@ export function ShipmentActions({
   const permissions = shipmentPermissions(
     user,
     shipment,
-    process.env.NEXT_PUBLIC_CUSTOMER_CANCELLATION_ENABLED === "true",
+    process.env.NEXT_PUBLIC_CUSTOMER_CANCELLATION_ENABLED !== "false",
   );
   const [action, setAction] = useState<
     "assign" | "transition" | "cancel" | null

@@ -6,7 +6,7 @@ import type {
   CourierResponse,
 } from "@/types/domain";
 export const modernCourierStatuses =
-  process.env.NEXT_PUBLIC_COURIER_STATUS_MODEL === "sprint4";
+  process.env.NEXT_PUBLIC_COURIER_STATUS_MODEL === "availability";
 export const courierStatuses: CourierApiStatus[] = modernCourierStatuses
   ? ["AVAILABLE", "BUSY", "INACTIVE"]
   : ["ACTIVO", "INACTIVO"];
