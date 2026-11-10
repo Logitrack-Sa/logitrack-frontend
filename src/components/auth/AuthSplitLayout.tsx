@@ -25,13 +25,6 @@ export function AuthSplitLayout({
             className="auth-brand-logo"
           />
         </Link>
-        <nav aria-label="Navegación de acceso">
-          <Link href="/seguimiento">
-            <MapPin size={15} />
-            Seguir un envío
-          </Link>
-          <Link href="/ayuda">¿Necesitás ayuda?</Link>
-        </nav>
       </header>
       <div className="auth-layout">
         <aside className="auth-photo-panel">
@@ -55,19 +48,9 @@ export function AuthSplitLayout({
           <div className="auth-photo-copy">
             <span>MENOS VUELTAS. MÁS DESTINOS.</span>
             <h2>
-              {variant === "register" ? (
-                <>
-                  Tu próxima historia
-                  <br />
-                  empieza con un envío.
-                </>
-              ) : (
-                <>
-                  Tu logística,
-                  <br />
-                  en un solo lugar.
-                </>
-              )}
+              {variant === "register"
+                ? "Organizá tus envíos."
+                : "Tu logística, en un solo lugar."}
             </h2>
             <p>
               Desde el primer paquete hasta su destino. Organizá, consultá y
