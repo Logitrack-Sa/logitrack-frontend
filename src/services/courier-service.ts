@@ -5,18 +5,8 @@ import type {
   CourierRequest,
   CourierResponse,
 } from "@/types/domain";
-export const modernCourierStatuses =
-  process.env.NEXT_PUBLIC_COURIER_STATUS_MODEL === "availability";
-export const courierStatuses: CourierApiStatus[] = modernCourierStatuses
-  ? ["AVAILABLE", "BUSY", "INACTIVE"]
-  : ["ACTIVO", "INACTIVO"];
-export const availableStatus = modernCourierStatuses ? "AVAILABLE" : "ACTIVO";
-function normalizeCourier(courier: CourierResponse): CourierResponse {
-  if (!modernCourierStatuses) return courier;
-  const status = courier.status === "ACTIVO" ? "AVAILABLE"
-    : courier.status === "INACTIVO" ? "INACTIVE" : courier.status;
-  return { ...courier, status };
-}
+export const courierStatuses: CourierApiStatus[] = ["ACTIVO", "INACTIVO"];
+export const availableStatus = "ACTIVO";
 export const courierService = {
   async list(page = 0, status?: CourierApiStatus, signal?: AbortSignal) {
     const { data } = await apiClient.get("/api/v1/couriers", {
@@ -24,25 +14,25 @@ export const courierService = {
       signal,
     });
     const result = normalizePage<CourierResponse>(data);
-    return { ...result, content: result.content.map(normalizeCourier) };
+    return result;
   },
   async get(id: string, signal?: AbortSignal) {
-    return normalizeCourier((
+    return (
       await apiClient.get<CourierResponse>(
         `/api/v1/couriers/${encodeURIComponent(id)}`,
         { signal },
       )
-    ).data);
+    ).data;
   },
   async create(request: CourierRequest) {
-    return normalizeCourier((await apiClient.post<CourierResponse>("/api/v1/couriers", request)).data);
+    return (await apiClient.post<CourierResponse>("/api/v1/couriers", request)).data;
   },
   async changeStatus(id: string, status: CourierApiStatus) {
-    return normalizeCourier((
+    return (
       await apiClient.patch<CourierResponse>(
         `/api/v1/couriers/${encodeURIComponent(id)}/status`,
         { status },
       )
-    ).data);
+    ).data;
   },
 };

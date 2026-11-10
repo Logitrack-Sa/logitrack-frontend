@@ -5,16 +5,15 @@ RUN npm ci --no-audit --no-fund
 
 FROM node:22-alpine AS builder
 WORKDIR /app
+RUN apk add --no-cache binutils && strip --strip-unneeded /usr/local/bin/node
 ENV NEXT_TELEMETRY_DISABLED=1
 ARG NEXT_PUBLIC_API_GATEWAY_URL=
 ARG NEXT_PUBLIC_PAYMENTS_ENABLED=false
 ARG NEXT_PUBLIC_BASE_PATH=
-ARG NEXT_PUBLIC_COURIER_STATUS_MODEL=availability
 ARG NEXT_PUBLIC_CUSTOMER_CANCELLATION_ENABLED=true
 ENV NEXT_PUBLIC_PAYMENTS_ENABLED=$NEXT_PUBLIC_PAYMENTS_ENABLED \
     NEXT_PUBLIC_API_GATEWAY_URL=$NEXT_PUBLIC_API_GATEWAY_URL \
     NEXT_PUBLIC_BASE_PATH=$NEXT_PUBLIC_BASE_PATH \
-    NEXT_PUBLIC_COURIER_STATUS_MODEL=$NEXT_PUBLIC_COURIER_STATUS_MODEL \
     NEXT_PUBLIC_CUSTOMER_CANCELLATION_ENABLED=$NEXT_PUBLIC_CUSTOMER_CANCELLATION_ENABLED
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -29,7 +28,7 @@ WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 RUN apk add --no-cache libstdc++ \
     && addgroup -S -g 1001 nextjs && adduser -S -u 1001 -G nextjs nextjs
-COPY --from=deps /usr/local/bin/node /usr/local/bin/node
+COPY --from=builder /usr/local/bin/node /usr/local/bin/node
 COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nextjs /app/public ./public

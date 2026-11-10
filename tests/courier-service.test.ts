@@ -3,7 +3,7 @@ import { courierService } from "@/services/courier-service";
 import { apiClient } from "@/lib/api-client";
 it("adapta el PageImpl que devuelve Courier sin perder los metadatos", async () => {
   vi.spyOn(apiClient, "get").mockResolvedValue({ data: {
-    content: [{ id: "courier", status: "AVAILABLE" }],
+    content: [{ id: "courier", status: "ACTIVO" }],
     number: 2, size: 10, totalElements: 21, totalPages: 3,
   } });
   const result = await courierService.list(2);

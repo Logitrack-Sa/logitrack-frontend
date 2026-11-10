@@ -10,9 +10,8 @@ export type SpringSecurityRole =
   | "ROLE_REPARTIDOR";
 export type AnyRole = RoleName | SpringSecurityRole;
 
-export type CourierStatus = "AVAILABLE" | "BUSY" | "INACTIVE";
-export type LegacyCourierStatus = "ACTIVO" | "INACTIVO";
-export type CourierApiStatus = CourierStatus | LegacyCourierStatus;
+export type CourierStatus = "ACTIVO" | "INACTIVO";
+export type CourierApiStatus = CourierStatus;
 
 export type ShipmentStatus =
   | "PENDIENTE"
@@ -78,6 +77,7 @@ export interface CourierResponse {
   dni: string;
   vehicleType: string;
   status: CourierApiStatus;
+  available?: boolean;
   createdAt: string;
 }
 

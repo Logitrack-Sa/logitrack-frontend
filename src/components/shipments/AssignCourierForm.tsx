@@ -51,7 +51,7 @@ export function AssignCourierForm({
             onChange={(event) => setCourierId(event.target.value)}
           >
             <option value="">Seleccioná un repartidor</option>
-            {data?.content.map((courier) => (
+            {data?.content.filter((courier) => courier.available !== false).map((courier) => (
               <option key={courier.id} value={courier.id}>
                 {courier.name} · {courier.vehicleType}
               </option>
