@@ -24,12 +24,25 @@ function MessageText({ text }: { text: string }) {
 }
 export function ChatWidget() {
   const { user } = useAuth();
-  return user ? <ChatPanel key={user.sub} /> : null;
+  const pathname = usePathname();
+  const publicMode = [
+    "/",
+    "/servicios",
+    "/ayuda",
+    "/nosotros",
+    "/seguimiento",
+  ].includes(pathname);
+  return publicMode || user ? (
+    <ChatPanel
+      key={publicMode ? "public" : user!.sub}
+      publicMode={publicMode}
+    />
+  ) : null;
 }
-function ChatPanel() {
+function ChatPanel({ publicMode }: { publicMode: boolean }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const { messages, loading, error, send, cancel } = useChatStream();
+  const { messages, loading, error, send, cancel } = useChatStream(publicMode);
   const bottom = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (pathname === "/chat") setOpen(true);
@@ -68,8 +81,9 @@ function ChatPanel() {
           <div className="chat-messages" role="log" aria-live="polite">
             {!messages.length && (
               <p>
-                Hola. Consultame por el seguimiento de un envío o la
-                disponibilidad de repartidores.
+                {publicMode
+                  ? "Hola, ¿en qué te puedo ayudar?"
+                  : "Hola. Consultame por el seguimiento de un envío o la disponibilidad de repartidores."}
               </p>
             )}
             {messages.map((message) => (

@@ -9,7 +9,7 @@ export interface ChatMessage {
   role: "user" | "assistant";
   text: string;
 }
-export function useChatStream() {
+export function useChatStream(publicMode = false) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,7 +21,7 @@ export function useChatStream() {
   const send = async (prompt: string) => {
     if (controller.current || !prompt.trim()) return;
     const token = getToken();
-    if (!token) {
+    if (!publicMode && !token) {
       setError("Iniciá sesión para consultar al asistente.");
       return;
     }
@@ -41,6 +41,44 @@ export function useChatStream() {
     setLoading(true);
     setError("");
     try {
+      if (publicMode) {
+        const response = await fetch(
+          resolveApiUrl(
+            "/api/v1/chat/public/message",
+            gatewayUrl,
+            window.location.origin,
+          ),
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ prompt: prompt.trim() }),
+            signal: request.signal,
+            cache: "no-store",
+          },
+        );
+        if (response.status === 429)
+          throw new Error(
+            "El asistente está ocupado. Probá de nuevo en un minuto.",
+          );
+        if (!response.ok)
+          throw new Error(
+            "El asistente no está disponible. Intentá nuevamente.",
+          );
+        const data = await response.json();
+        if (typeof data.message !== "string" || !data.message.trim())
+          throw new Error(
+            "El asistente no está disponible. Intentá nuevamente.",
+          );
+        setMessages((previous) =>
+          previous.map((message) =>
+            message.id === id ? { ...message, text: data.message } : message,
+          ),
+        );
+        return;
+      }
       const url = resolveApiUrl(
         "/api/v1/chat/stream",
         gatewayUrl,

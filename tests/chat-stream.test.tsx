@@ -6,6 +6,27 @@ vi.mock("@/lib/session", () => ({
   clearSession: vi.fn(),
 }));
 afterEach(() => vi.unstubAllGlobals());
+it("permite consultas públicas sin enviar el token de la cuenta", async () => {
+  const fetchMock = vi
+    .fn()
+    .mockResolvedValue(
+      new Response(
+        JSON.stringify({ message: "Usá Seguimiento con tu código." }),
+        { headers: { "Content-Type": "application/json" } },
+      ),
+    );
+  vi.stubGlobal("fetch", fetchMock);
+  const { result } = renderHook(() => useChatStream(true));
+  await act(async () => {
+    await result.current.send("¿Cómo sigo un envío?");
+  });
+  expect(fetchMock.mock.calls[0][1].headers.Authorization).toBeUndefined();
+  expect(fetchMock.mock.calls[0][1].method).toBe("POST");
+  expect(new URL(fetchMock.mock.calls[0][0]).pathname).toBe(
+    "/api/v1/chat/public/message",
+  );
+  expect(result.current.messages.at(-1)?.text).toContain("Seguimiento");
+});
 it("envía Bearer por fetch y reconstruye el mensaje sin mostrar marcadores SSE", async () => {
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
