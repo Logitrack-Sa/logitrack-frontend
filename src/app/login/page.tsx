@@ -3,15 +3,15 @@
 
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { authService } from "@/services/auth-service";
 import { decodeSession, safeRedirect, setToken } from "@/lib/session";
+import { navigateAfterLogin } from "@/lib/navigation";
 import { handleApiError } from "@/types/api-error";
 import { AuthSplitLayout } from "@/components/auth/AuthSplitLayout";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = safeRedirect(searchParams.get("redirect"));
   const sessionExpired = searchParams.get("error") === "session_expired";
@@ -57,8 +57,7 @@ function LoginForm() {
       setToken(response.accessToken, response.expiresIn);
 
       toast.success("Inicio de sesión exitoso. Bienvenido a LogiTrack.");
-      router.push(redirectPath);
-      router.refresh();
+      navigateAfterLogin(redirectPath);
     } catch (error) {
       const status = (error as { response?: { status?: number } })?.response
         ?.status;
@@ -130,7 +129,7 @@ function LoginForm() {
               autoComplete="username"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="carlos.admin@logitrack.com o usuario"
+              placeholder="Tu correo o nombre de usuario"
               className={`block w-full rounded-xl border pl-10 pr-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition focus:outline-none focus:ring-2 ${
                 identifierError
                   ? "border-rose-500 bg-rose-50/30 focus:border-rose-500 focus:ring-rose-200"
@@ -186,7 +185,9 @@ function LoginForm() {
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600"
-              tabIndex={-1}
+              aria-label={
+                showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+              }
             >
               {showPassword ? (
                 <svg
@@ -278,9 +279,9 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <AuthSplitLayout
-      badgeText="Autenticación JWT"
+      badgeText="Mi cuenta"
       title="Bienvenido de nuevo"
-      subtitle="Ingresa tus credenciales para acceder al panel operativo de LogiTrack."
+      subtitle="Ingresá a tu cuenta para gestionar y consultar tus envíos."
     >
       <Suspense
         fallback={

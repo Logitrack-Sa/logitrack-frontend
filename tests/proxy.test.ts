@@ -60,3 +60,9 @@ it("conserva rutas locales con parámetros", () =>
   expect(safeRedirect("/shipments?status=PENDIENTE")).toBe(
     "/shipments?status=PENDIENTE",
   ));
+
+it("reserva el CRUD de repartidores a ADMIN como el Gateway", () => {
+  expect(
+    proxy(request("/couriers", ["REPARTIDOR"])).headers.get("location"),
+  ).toContain("/unauthorized");
+});

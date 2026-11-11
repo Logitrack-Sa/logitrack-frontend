@@ -66,8 +66,7 @@ export function proxy(request: NextRequest) {
 
       if (
         pathname.startsWith("/couriers") &&
-        !normalizedRoles.includes("ADMIN") &&
-        !normalizedRoles.includes("REPARTIDOR")
+        !normalizedRoles.includes("ADMIN")
       ) {
         return NextResponse.redirect(
           new URL(withBasePath("/unauthorized"), request.url),

@@ -5,6 +5,7 @@ import LoginPage from "@/app/login/page";
 import { authService } from "@/services/auth-service";
 import { setToken } from "@/lib/session";
 const { push } = vi.hoisted(() => ({ push: vi.fn() }));
+vi.mock("@/lib/navigation", () => ({ navigateAfterLogin: push }));
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push, refresh: vi.fn() }),
   useSearchParams: () => new URLSearchParams("redirect=%2Fshipments"),

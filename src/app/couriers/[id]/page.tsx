@@ -121,7 +121,7 @@ function Courier({ id }: { id: string }) {
 export default function Page() {
   const { id } = useParams<{ id: string }>();
   return (
-    <Access roles={["ADMIN", "REPARTIDOR"]}>
+    <Access roles={["ADMIN"]}>
       <Courier id={id} />
     </Access>
   );

@@ -113,7 +113,7 @@ function Couriers() {
 }
 export default function Page() {
   return (
-    <Access roles={["ADMIN", "REPARTIDOR"]}>
+    <Access roles={["ADMIN"]}>
       <Couriers />
     </Access>
   );
