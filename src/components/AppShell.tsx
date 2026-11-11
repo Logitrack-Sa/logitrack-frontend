@@ -8,9 +8,17 @@ import { VerificationBanner } from "@/components/auth/VerificationBanner";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   if (
-    ["/", "/login", "/register", "/verify-email", "/unauthorized"].includes(
-      pathname,
-    )
+    [
+      "/",
+      "/login",
+      "/register",
+      "/verify-email",
+      "/unauthorized",
+      "/servicios",
+      "/ayuda",
+      "/nosotros",
+      "/seguimiento",
+    ].includes(pathname)
   )
     return (
       <div className="public-page">

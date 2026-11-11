@@ -16,21 +16,21 @@ export function AuthSplitLayout({
   badgeText = "Portal de Acceso Seguro",
 }: AuthSplitLayoutProps) {
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] w-full overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white flex flex-col justify-between">
+    <div className="relative min-h-[calc(100vh-4rem)] w-full overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-green-950 text-white flex flex-col justify-between">
       {/* Luces difuminadas decorativas en toda la pantalla */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-blue-500/20 blur-3xl"
+        className="pointer-events-none absolute -top-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-green-500/20 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-0 h-[28rem] w-[28rem] rounded-full bg-indigo-500/20 blur-3xl"
+        className="pointer-events-none absolute bottom-0 right-0 h-[28rem] w-[28rem] rounded-full bg-emerald-500/20 blur-3xl"
       />
 
       <div className="relative z-10 my-auto w-full px-6 py-10 lg:px-12 xl:px-16 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         {/* Columna Izquierda (7 columnas en desktop): Hero Corporativo LogiTrack */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-3.5 py-1 text-xs font-semibold text-blue-300 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border border-green-400/30 bg-green-500/10 px-3.5 py-1 text-xs font-semibold text-green-300 backdrop-blur-sm">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             Plataforma Logística de Nueva Generación • Acceso por API Gateway
           </div>
@@ -49,7 +49,7 @@ export function AuthSplitLayout({
           {/* Tarjetas de beneficios / features sobre el fondo oscuro */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 max-w-2xl">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/20 text-blue-400">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-500/20 text-green-400">
                 <svg
                   className="h-5 w-5"
                   fill="none"
@@ -109,12 +109,12 @@ export function AuthSplitLayout({
         <div className="lg:col-span-5 w-full">
           <div className="rounded-2xl border border-white/15 bg-white p-8 sm:p-10 text-slate-900 shadow-2xl shadow-black/40">
             <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-600/20">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700 ring-1 ring-inset ring-green-600/20">
                 {badgeText}
               </span>
               <Link
                 href="/"
-                className="text-xs font-medium text-slate-500 hover:text-blue-600 transition"
+                className="text-xs font-medium text-slate-500 hover:text-green-600 transition"
               >
                 ← Volver al inicio
               </Link>
